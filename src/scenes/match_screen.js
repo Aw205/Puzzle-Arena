@@ -18,7 +18,15 @@ class match_screen extends Phaser.Scene{
     create(){
 
         this.board = new Board(this,100,100);
+
+         
     
+    }
+
+    update(time,delta){
+        for(var i=0;i<this.board.length;i++){
+            this.board.list[i].update();
+        }
     }
 
 

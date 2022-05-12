@@ -6,7 +6,8 @@ let config = {
     scene: [match_screen,game_screen],
     physics:{
         default:'arcade',
-        arcade:{debug:true}
+        arcade:{debug:true},
+        //debug: true
     },
     //pixelArt: true,
     //zoom : 1
