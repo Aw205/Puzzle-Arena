@@ -13,9 +13,8 @@ class Orb extends Phaser.Physics.Arcade.Sprite{
         this.type=1;
         this.row = row;
         this.col= col;  
-        this.isMatched = false;
         this.isVisited = false;
-        this.targetPos = new Phaser.Math.Vector2(0,0);
+        this.targetPos = new Phaser.Math.Vector2(0,0); // in world units not rows/cols
         this.startPos = new Phaser.Math.Vector2(x,y);
 
         this.scene.physics.add.existing(this);
