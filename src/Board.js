@@ -80,6 +80,9 @@ class Board extends Phaser.GameObjects.Container {
     }
 
     onPointerUp(pointer, localX, localY, event) {
+
+        this.disableInteractive();
+
         this.cursorOrb.setToStartPosition();
         this.cursorOrb.resetDisplayState();
         this.solveBoard();
@@ -122,8 +125,10 @@ class Board extends Phaser.GameObjects.Container {
         let numCombos = this.findCombos();
         if(numCombos>0){
             this.fadeCombos();
+            return;
 
         }
+        this.setInteractive();
     }
 
     resetBoardState() {

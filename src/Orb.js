@@ -35,12 +35,14 @@ class Orb extends Phaser.Physics.Arcade.Sprite{
     setPointerDownDisplayState(){
 
         this.setAlpha(0.8);
+        this.setDepth(1);
         //this.setScale((Orb.WIDTH+5)/this.width,(Orb.HEIGHT+5)/this.height);
     }
 
     resetDisplayState(){
 
         this.setAlpha(1);
+        this.setDepth(0);
         //this.setScale(Orb.WIDTH/this.width,Orb.HEIGHT/this.height);
     }
 
