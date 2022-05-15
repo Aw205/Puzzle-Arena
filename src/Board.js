@@ -9,8 +9,8 @@ class Board extends Phaser.GameObjects.Container{
         this.BOARD_HEIGHT = 5;
         this.BOARD_WIDTH = 6;
         this.cursorOrb = null;
-        this.orbArray = null;
-        this.skyfallArray = null;
+        this.orbArray = new Array(this.BOARD_HEIGHT);
+        this.skyfallArray = new Array(this.BOARD_HEIGHT);
 
         this.startX=0;
         this.startY=0;
@@ -39,6 +39,7 @@ class Board extends Phaser.GameObjects.Container{
         let col = parseInt((pointer.x-100)/32);
         
         this.cursorOrb = this.orbArray[row][col];
+       // this.cursorOrb.setOrigin(0,1);
 
         this.startX= this.cursorOrb.x;
         this.startY= this.cursorOrb.y;
@@ -68,7 +69,6 @@ class Board extends Phaser.GameObjects.Container{
             current.setPosition(current.startPos.x,current.startPos.y); 
         
             //update row and column
-
             [this.cursorOrb.row,current.row] = [current.row,this.cursorOrb.row];
             [this.cursorOrb.col,current.col] = [current.col,this.cursorOrb.col];
 
@@ -78,22 +78,18 @@ class Board extends Phaser.GameObjects.Container{
     }
 
     onDragEnd(pointer,dragX,dragY){
-
         this.cursorOrb.setToStartPosition();
     }
 
     onPointerUp(pointer,localX,localY,event){
-
         this.cursorOrb.setToStartPosition();
         this.solveBoard();
-        //this.skyfall();
     }
 
     generateBoard(){
 
-       let rand = Phaser.Math.Between(0,4);
-       this.orbArray = new Array(this.BOARD_HEIGHT);
-       this.skyfallArray = new Array(this.BOARD_HEIGHT);
+       let rand = -1;
+      
         for(var i =0; i<this.BOARD_HEIGHT;i++){
             this.orbArray[i]= new Array(this.BOARD_WIDTH);
             this.skyfallArray[i]= new Array(this.BOARD_WIDTH);
@@ -109,11 +105,10 @@ class Board extends Phaser.GameObjects.Container{
                 this.orbArray[row][col].type = rand;
 
                 this.skyfallArray[row][col] = new Orb(this.scene,x,y-5*Orb.HEIGHT,row,col,this.orbImages[rand]);
-                this.skyfallArray[row][col].type = rand;
+                this.skyfallArray[row][col].type = Phaser.Math.Between(0,4);
                 this.skyfallArray[row][col].setVisible(false);
 
                 this.add(this.orbArray[row][col]);
-
                 this.add(this.skyfallArray[row][col]);
                
             }
@@ -123,22 +118,46 @@ class Board extends Phaser.GameObjects.Container{
     solveBoard(){
 
         this.matchBoard();
-        console.log("Number combos: " + this.comboList.length);
+        this.fadeCombos();
+    }
 
-        /* for(var i = 0; i < this.BOARD_HEIGHT;i++){
-            for(var  j = 0; j < this.BOARD_WIDTH;j++){
-                if(this.orbArray[i][j].isMatched){
-                    this.orbArray[i][j].destroy();
-                    this.orbArray[i][j]=null;
-                }
-            }
-        } */
+    fadeCombos(){
+
+
+        
+        var timer = this.scene.time.addEvent({
+            delay: 500,                
+            callback: this.onEvent,
+            callbackScope: this,
+            repeat: this.comboList.length-1
+        });
+
+        //var skyfallTimer = this.scene.time.addEvent({
+            //delay: 500*this.comboList.length+1,                
+            //callback: this.skyfall,
+            //callbackScope: this,
+        //});
 
     }
 
-    matchBoard(){
+    onEvent(){
+        let set = this.comboList.pop();
+        for(let orb of set){
+            this.scene.tweens.add({
+                targets: orb,
+                alpha: { from: 1, to: 0 },
+                ease: 'Sine.InOut',
+                duration: 500,
+                onCompleteScope: this,
+                onComplete: function () {
+                    orb.destroy();
+                    this.orbArray[orb.row][orb.col]=null;
+                }
+            });  
+        } 
+    }
 
-        let connectedOrbs = [];
+    matchBoard(){
 
         for(var row = 0; row < this.BOARD_HEIGHT;row++){
             for(var  col = 0; col < this.BOARD_WIDTH;col++){
@@ -149,41 +168,10 @@ class Board extends Phaser.GameObjects.Container{
                     this.floodfill(row,col,current.type,set);
                 }
                 if(set.size>2){
-                    connectedOrbs.push(set);
+                    this.comboList.push(set);
                 }
             }
         }
-
-        for(let set of connectedOrbs){
-           /*  arr.sort(this.compareRows); // checking horizontal matches
-            let rowList = []; 
-            for(var i =0 ; i< arr.length-1; i++){
-                if(arr[i].row == arr[i+1].row){
-                    rowList.push(arr[i]);
-                }
-                else{
-                    rowList = [];
-                }
-            }
-            arr.sort(this.compareCols);
-            let colList = [];
-            for(var i =0 ; i< arr.length -1; i++){
-                if(!rowList.includes(arr[i]) && arr[i].col==arr[i+1].col){
-                    colList.push(arr[i]);
-                }
-                else{
-                    colList = [];
-                }
-            } */
-                this.comboList.push(set);
-        }
-    }
-
-    compareRows(orb1,orb2){
-        return orb1.row - orb2.row;
-    }
-    compareCols(orb1,orb2){
-        return orb1.col - orb2.col;
     }
 
     floodfill(row,col,type,matchedList){
@@ -224,11 +212,6 @@ class Board extends Phaser.GameObjects.Container{
 
     skyfall(){
 
-        this.calcFallDistance();
-    }
-
-    calcFallDistance(){
-
         let dropDist =0;
         for(var col = 0; col < this.BOARD_WIDTH; col++){
             for(var  row = this.BOARD_HEIGHT-1; row > -1;row--){
@@ -244,9 +227,14 @@ class Board extends Phaser.GameObjects.Container{
             }
              // need to skyfall new orbs 
              for(var r = this.BOARD_HEIGHT-1;r > this.BOARD_HEIGHT-dropDist-1 ;r--){
+                let newRow = r-this.BOARD_HEIGHT+dropDist;
                 let current = this.skyfallArray[r][col];
                 current.setVisible(true);
                 current.targetPos.set(current.x,-this.height/2+(r-this.BOARD_HEIGHT+dropDist)*Orb.HEIGHT);
+
+                //[this.skyfallArray[r][col],this.orbArray[newRow][col]] =  [this.orbArray[newRow][col],this.skyfallArray[r][col]];
+                //current.row = newRow;
+
                 this.scene.physics.moveToObject(current,current.targetPos,60,500);
                 
             } 
