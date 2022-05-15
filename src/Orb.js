@@ -14,7 +14,7 @@ class Orb extends Phaser.Physics.Arcade.Sprite{
         this.row = row;
         this.col= col;  
         this.isVisited = false;
-        this.targetPos = new Phaser.Math.Vector2(0,0); // in world units not rows/cols
+        this.targetPos = new Phaser.Math.Vector2(0,0); // not in rows/col
         this.startPos = new Phaser.Math.Vector2(x,y);
 
         this.scene.physics.add.existing(this);
@@ -30,6 +30,18 @@ class Orb extends Phaser.Physics.Arcade.Sprite{
                 this.body.reset(this.targetPos.x,this.targetPos.y);
             }
         }
+    }
+
+    setPointerDownDisplayState(){
+
+        this.setAlpha(0.8);
+        //this.setScale((Orb.WIDTH+5)/this.width,(Orb.HEIGHT+5)/this.height);
+    }
+
+    resetDisplayState(){
+
+        this.setAlpha(1);
+        //this.setScale(Orb.WIDTH/this.width,Orb.HEIGHT/this.height);
     }
 
     setToStartPosition(){

@@ -3,7 +3,6 @@ class Board extends Phaser.GameObjects.Container {
 
     constructor(scene, x, y) {
         super(scene, x, y);
-
         this.orbImages = ["fire", "water", "wood", "dark", "light"];
 
         this.BOARD_HEIGHT = 5;
@@ -16,18 +15,17 @@ class Board extends Phaser.GameObjects.Container {
         this.startY = 0;
         this.comboList = [];
 
-        this.on("pointerdown", this.onPointerDown);
-        this.on("pointerup", this.onPointerUp);
-        this.on("drag", this.onDrag);
-        this.on("dragend", this.onDragEnd);
+        this.on("pointerdown", this.onPointerDown)
+            .on("pointerup", this.onPointerUp)
+            .on("drag", this.onDrag)
+            .on("dragend", this.onDragEnd)
+            .setPosition(200, 300)
+            .setSize(this.BOARD_WIDTH * Orb.WIDTH, this.BOARD_HEIGHT * Orb.HEIGHT)
+            .generateBoard();
 
-        this.setPosition(200, 300);
-        this.setSize(this.BOARD_WIDTH * Orb.WIDTH, this.BOARD_HEIGHT * Orb.HEIGHT);
-
-        this.generateBoard();
+        this.setInteractive({ draggable: true });
 
         this.scene.physics.add.existing(this);
-        this.setInteractive({ draggable: true });
         this.scene.add.existing(this);
 
 
@@ -39,6 +37,7 @@ class Board extends Phaser.GameObjects.Container {
         let col = parseInt((pointer.x - 100) / Orb.HEIGHT);
 
         this.cursorOrb = this.orbArray[row][col];
+        this.cursorOrb.setPointerDownDisplayState();
 
         this.startX = this.cursorOrb.x;
         this.startY = this.cursorOrb.y;
@@ -53,11 +52,11 @@ class Board extends Phaser.GameObjects.Container {
         let deltaX = this.x - dragX;
         let deltaY = this.y - dragY;
 
-        if (this.startX - deltaX >= -this.width / 2 && (this.startX - deltaX <= -this.width / 2 + (this.BOARD_WIDTH - 1) * 32)) {
+        if (this.startX - deltaX >= -this.width / 2 && (this.startX - deltaX <= -this.width / 2 + (this.BOARD_WIDTH - 1) * Orb.WIDTH)) {
             this.cursorOrb.setX(this.startX - deltaX);
         }
 
-        if (this.startY - deltaY >= -this.height / 2 && (this.startY - deltaY <= -this.height / 2 + (this.BOARD_HEIGHT - 1) * 32)) {
+        if (this.startY - deltaY >= -this.height / 2 && (this.startY - deltaY <= -this.height / 2 + (this.BOARD_HEIGHT - 1) * Orb.HEIGHT)) {
             this.cursorOrb.setY(this.startY - deltaY);
         }
 
@@ -82,6 +81,7 @@ class Board extends Phaser.GameObjects.Container {
 
     onPointerUp(pointer, localX, localY, event) {
         this.cursorOrb.setToStartPosition();
+        this.cursorOrb.resetDisplayState();
         this.solveBoard();
 
     }
@@ -104,8 +104,9 @@ class Board extends Phaser.GameObjects.Container {
                 this.orbArray[row][col] = new Orb(this.scene, x, y, row, col, this.orbImages[rand]);
                 this.orbArray[row][col].type = rand;
 
+                rand = Phaser.Math.Between(0, 4);
                 this.skyfallArray[row][col] = new Orb(this.scene, x, y - this.BOARD_HEIGHT * Orb.HEIGHT, row, col, this.orbImages[rand]);
-                this.skyfallArray[row][col].type = Phaser.Math.Between(0, 4);
+                this.skyfallArray[row][col].type = rand;
                 this.skyfallArray[row][col].setVisible(false);
 
                 this.add(this.orbArray[row][col]);
@@ -117,8 +118,12 @@ class Board extends Phaser.GameObjects.Container {
 
     solveBoard() {
 
-        this.matchBoard();
-        this.fadeCombos();
+        this.resetBoardState();
+        let numCombos = this.findCombos();
+        if(numCombos>0){
+            this.fadeCombos();
+
+        }
     }
 
     resetBoardState() {
@@ -147,25 +152,24 @@ class Board extends Phaser.GameObjects.Container {
             delay: 500,
             callback: this.onEvent,
             callbackScope: this,
-            repeat: this.comboList.length - 1
-        });
-
-        var skyfallTimer = this.scene.time.addEvent({
-            delay: 1000 * this.comboList.length + 1,
-            callback: this.skyfall,
-            callbackScope: this
+            repeat: this.comboList.length
         });
 
     }
 
     onEvent() {
+
+        if(this.comboList.length==0){
+            this.skyfall();
+            return;
+        }
         let set = this.comboList.pop();
         for (let orb of set) {
             this.scene.tweens.add({
                 targets: orb,
                 alpha: { from: 1, to: 0 },
                 ease: 'Sine.InOut',
-                duration: 500,
+                duration: 450,
                 onCompleteScope: this,
                 onComplete: function () {
                     this.orbArray[orb.row][orb.col] = null;
@@ -175,7 +179,7 @@ class Board extends Phaser.GameObjects.Container {
         }
     }
 
-    matchBoard() {
+    findCombos() {
 
         for (let arr of this.orbArray) {
             for (let curr of arr) {
@@ -189,12 +193,13 @@ class Board extends Phaser.GameObjects.Container {
                 }
             }
         }
+        return this.comboList.length;
     }
 
     floodfill(row, col, type, comboSet) {
 
         let adj_arr = [];
-        let matches = [[],[]]; 
+        let matches = [[], []];
 
         for (var i = 0; i < 4; i++) {
             let x = (i - 1) % 2;     // -1 0 1 0
@@ -209,16 +214,14 @@ class Board extends Phaser.GameObjects.Container {
                 }
             }
         }
-
         for (let orb of adj_arr) {
             orb.isVisited = true;
             this.floodfill(orb.row, orb.col, type, comboSet);
         }
-
-        for(let arr of matches){
-            if(arr.length == 2){
+        for (let arr of matches) {
+            if (arr.length == 2) {
                 comboSet.add(this.orbArray[row][col]);
-                for(let orb of arr){
+                for (let orb of arr) {
                     comboSet.add(orb);
                 }
             }
@@ -237,36 +240,47 @@ class Board extends Phaser.GameObjects.Container {
                 else {
                     current.targetPos.set(current.x, -this.height / 2 + (row + dropDist) * Orb.HEIGHT);
                     this.scene.physics.moveToObject(current, current.targetPos, 60, 500);
-
-                    current.row = row + dropDist;
+                    current.row += dropDist;
                     current.startPos.set(current.x, current.targetPos.y);
-
-                    [this.orbArray[row][col], this.orbArray[row + dropDist][col]] = [this.orbArray[row + dropDist][col], this.orbArray[row][col]];
+                    [current, this.orbArray[row + dropDist][col]] = [this.orbArray[row + dropDist][col], current];
                 }
             }
-            // need to skyfall new orbs 
+            //skyfalling new orbs 
             for (var r = this.BOARD_HEIGHT - 1; r > this.BOARD_HEIGHT - dropDist - 1; r--) {
-                let newRow = r - this.BOARD_HEIGHT + dropDist;
+
                 let current = this.skyfallArray[r][col];
+                let newRow = r - this.BOARD_HEIGHT + dropDist;
+               
                 current.setVisible(true);
-                current.targetPos.set(current.x, -this.height / 2 + (r - this.BOARD_HEIGHT + dropDist) * Orb.HEIGHT);
+                current.targetPos.set(current.x, -this.height / 2 + (newRow) * Orb.HEIGHT);
 
                 current.row = newRow;
                 current.startPos.set(current.x, current.targetPos.y);
-
                 this.orbArray[newRow][col] = current;
                 this.skyfallArray[r][col] = null;
-
                 this.scene.physics.moveToObject(current, current.targetPos, 60, 500);
 
             }
             dropDist = 0;
         }
-        this.resetBoardState();
+        this.solveBoard(); // solve the board again in case there are combos
+        //this.printBoard();
     }
 
     isInBounds(row, col) {
         return (row > -1 && row < this.BOARD_HEIGHT && col > -1 && col < this.BOARD_WIDTH);
+    }
+
+    printBoard() {
+
+        let s ="";
+        for (var row = 0; row < this.BOARD_HEIGHT; row++) {
+            for (var col = 0; col < this.BOARD_WIDTH; col++) {
+                  s+= (this.orbArray[row][col].type + " ");
+            }
+            s+="\n";
+        }
+        console.log(s);
     }
 
 }
