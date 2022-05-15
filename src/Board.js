@@ -38,10 +38,18 @@ class Board extends Phaser.GameObjects.Container {
 
         this.cursorOrb = this.orbArray[row][col];
         this.cursorOrb.setPointerDownDisplayState();
-
         this.startX = this.cursorOrb.x;
         this.startY = this.cursorOrb.y;
 
+        this.cursorOrb.setOrigin(-(localX-16-32*col)/Orb.WIDTH,-(localY-16-32*row)/Orb.HEIGHT);
+
+        console.log("localX: " + localX + " localY: " + localY);
+        //console.log("pointerX: " + pointer.x + " pointerY: " + pointer.y);
+        //console.log("orbX: " + this.cursorOrb.x + " orbY: " + this.cursorOrb.y);
+
+        //console.log("cursorX-localX: " + (this.cursorOrb.x - localX));
+
+        
     }
 
     onDrag(pointer, dragX, dragY) {

@@ -48,6 +48,7 @@ class Orb extends Phaser.Physics.Arcade.Sprite{
 
     setToStartPosition(){
         this.setPosition(this.startPos.x,this.startPos.y); 
+        this.setOrigin(0,0);
     }
 
 }
