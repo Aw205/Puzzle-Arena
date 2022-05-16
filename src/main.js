@@ -8,7 +8,7 @@ let config = {
         default:'arcade',
         //arcade:{debug:true},
     },
-    //pixelArt: true,
+    pixelArt: true,
     //zoom : 1
 }
 let game = new Phaser.Game(config);

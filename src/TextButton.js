@@ -13,7 +13,7 @@ class TextButton extends Phaser.GameObjects.Text{
     }
 
       onClick(){
-        //this.scene.sound.play("button_click",{volume:0.3});
+        this.scene.sound.play("button_click",{volume:0.1});
         this.callback();
       }
 
