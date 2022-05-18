@@ -10,7 +10,16 @@ class Menu extends Phaser.Scene{
 
         this.load.audio("button_click","./assets/audio/button_click.wav");
         this.load.audio("music","./assets/audio/optimismcavern.mp3"); 
-        //this.load.image("menu_background","./assets/menu_background.png"); 
+        //this.load.image("menu_background","./assets/menu_background.png");
+        // set load path
+        this.load.path = 'assets/';
+        // Load all assets here.
+        // Since the asset keys can be used in any scene, can load here
+        // and use in any other scene
+
+        // Load atlas here
+        this.load.atlas('link_atlas', 'human_base.png', 'linkmap.json');
+        this.load.image('enemy', 'enemy.png' );
     }
 
     create(){
@@ -23,7 +32,7 @@ class Menu extends Phaser.Scene{
         //let background =  this.add.image(game.config.width/2,game.config.height/2,"menu_background");
         //background.setScale(0.5,0.5);
         
-        const startButton = new TextButton(this,game.config.width/2,250,"Start",{fontSize: 30},()=> this.scene.start("match_screen")).setOrigin(0.5);
+        const startButton = new TextButton(this,game.config.width/2,250,"Start",{fontSize: 30},()=> this.scene.start("game_screen")).setOrigin(0.5);
         //const tutorialButton = new TextButton(this,game.config.width/2+25,350,"How To Play",{fontSize: 30},()=> this.scene.start("Tutorial")).setOrigin(0.5);
         
     }
