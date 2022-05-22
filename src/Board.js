@@ -25,16 +25,33 @@ class Board extends Phaser.GameObjects.Container {
 
         this.setInteractive({ draggable: true });
 
+        this.rect = this.getBounds();
+        console.log("rect X:" + this.rect.x);
+        console.log("rect Y: " + this.rect.y);
+
+        console.log("rect top:" + this.rect.top);
+        console.log("rect bottom: " + this.rect.bottom);
+
+
         this.scene.physics.add.existing(this);
         this.scene.add.existing(this);
 
 
     }
 
+    getPointerArrayPos(pointer,updateRow){
+
+        if(updateRow){
+            return parseInt((pointer.y - 220)/ Orb.WIDTH);
+        }
+        return parseInt((pointer.x - 100) / Orb.HEIGHT);
+    }
+
     onPointerDown(pointer, localX, localY, event) {
 
-        let row = parseInt((pointer.y - 220) / Orb.WIDTH);
-        let col = parseInt((pointer.x - 100) / Orb.HEIGHT);
+        let row = this.getPointerArrayPos(pointer,true);
+        let col = this.getPointerArrayPos(pointer,false);
+        console.log("localY: " + localY);
 
         this.cursorOrb = this.orbArray[row][col];
         this.cursorOrb.setPointerDownDisplayState();
@@ -47,8 +64,8 @@ class Board extends Phaser.GameObjects.Container {
 
     onDrag(pointer, dragX, dragY) {
 
-        let row = parseInt((pointer.y - 220) / Orb.WIDTH);
-        let col = parseInt((pointer.x - 100) / Orb.HEIGHT);
+        let row = this.getPointerArrayPos(pointer,true);
+        let col = this.getPointerArrayPos(pointer,false);
 
         let deltaX = this.x - dragX;
         let deltaY = this.y - dragY;
@@ -83,7 +100,6 @@ class Board extends Phaser.GameObjects.Container {
     onPointerUp(pointer, localX, localY, event) {
 
         this.disableInteractive();
-
         this.cursorOrb.setToStartPosition();
         this.cursorOrb.resetDisplayState();
         this.solveBoard();
@@ -269,8 +285,7 @@ class Board extends Phaser.GameObjects.Container {
             }
             dropDist = 0;
         }
-        this.solveBoard(); // solve the board again in case there are combos
-        //this.printBoard();
+        this.solveBoard(); 
     }
 
     isInBounds(row, col) {
@@ -278,7 +293,6 @@ class Board extends Phaser.GameObjects.Container {
     }
 
     printBoard() {
-
         let s ="";
         for (var row = 0; row < this.BOARD_HEIGHT; row++) {
             for (var col = 0; col < this.BOARD_WIDTH; col++) {

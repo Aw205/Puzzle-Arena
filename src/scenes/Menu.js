@@ -11,21 +11,14 @@ class Menu extends Phaser.Scene{
         this.load.audio("button_click","./assets/audio/button_click.wav");
         this.load.audio("music","./assets/audio/optimismcavern.mp3"); 
         //this.load.image("menu_background","./assets/menu_background.png");
-        // set load path
-        this.load.path = 'assets/';
-        // Load all assets here.
-        // Since the asset keys can be used in any scene, can load here
-        // and use in any other scene
-
-        // Load atlas here
-        this.load.atlas('link_atlas', 'human_base.png', 'linkmap.json');
-        this.load.image('enemy', 'enemy.png' );
+        //this.load.atlas('link_atlas', './assets/human_base.png', './assets/linkmap.json');
+        //this.load.image('enemy', './assets/enemy.png' );
     }
 
     create(){
 
          if(!music_isPlaying){
-            this.sound.play("music",{loop: true});
+            //this.sound.play("music",{loop: true});
             music_isPlaying=true;
         }
 
