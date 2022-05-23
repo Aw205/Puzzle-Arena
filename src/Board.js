@@ -19,19 +19,14 @@ class Board extends Phaser.GameObjects.Container {
             .on("pointerup", this.onPointerUp)
             .on("drag", this.onDrag)
             .on("dragend", this.onDragEnd)
-            .setPosition(200, 300)
+            //.setPosition(200, 300)
+            .setPosition(300,350)
             .setSize(this.BOARD_WIDTH * Orb.WIDTH, this.BOARD_HEIGHT * Orb.HEIGHT)
             .generateBoard();
 
         this.setInteractive({ draggable: true });
 
         this.rect = this.getBounds();
-        console.log("rect X:" + this.rect.x);
-        console.log("rect Y: " + this.rect.y);
-
-        console.log("rect top:" + this.rect.top);
-        console.log("rect bottom: " + this.rect.bottom);
-
 
         this.scene.physics.add.existing(this);
         this.scene.add.existing(this);
@@ -41,17 +36,19 @@ class Board extends Phaser.GameObjects.Container {
 
     getPointerArrayPos(pointer,updateRow){
 
+       // console.log("pointer y =" + pointer.y);
+       // console.log("pointer x =" + pointer.x);
+
         if(updateRow){
-            return parseInt((pointer.y - 220)/ Orb.WIDTH);
+            return parseInt((pointer.y - /*220*/ 275)/ Orb.WIDTH);
         }
-        return parseInt((pointer.x - 100) / Orb.HEIGHT);
+        return parseInt((pointer.x - /*100*/ 204) / Orb.HEIGHT);
     }
 
     onPointerDown(pointer, localX, localY, event) {
 
         let row = this.getPointerArrayPos(pointer,true);
         let col = this.getPointerArrayPos(pointer,false);
-        console.log("localY: " + localY);
 
         this.cursorOrb = this.orbArray[row][col];
         this.cursorOrb.setPointerDownDisplayState();

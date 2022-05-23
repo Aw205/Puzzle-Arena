@@ -17,7 +17,7 @@ let config = {
         }
     },
     scene: [Menu,match_screen,game_screen],
-    pixelArt: true,
+    //pixelArt: true,
     //zoom : 1
 }
 let game = new Phaser.Game(config);
