@@ -31,7 +31,7 @@ class game_screen extends Phaser.Scene {
 
         this.physics.add.collider(this.player,layer);
         this.physics.add.collider(enemyArray[0],this.player,()=>{
-            this.scene.start("match_screen");
+            this.scene.start("match_screen",{enemy: enemyArray[0]});
         });
 
         this.cameras.main.startFollow(this.player,false,0.2,0.2);

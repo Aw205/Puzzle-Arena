@@ -9,7 +9,7 @@ class Menu extends Phaser.Scene{
     preload(){
 
         this.load.audio("button_click","./assets/audio/button_click.wav");
-        this.load.audio("music","./assets/audio/optimismcavern.mp3"); 
+        this.load.audio("music","./assets/audio/puzzle_arena.mp3"); 
         //this.load.image("menu_background","./assets/menu_background.png");
     }
 

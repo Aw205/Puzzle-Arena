@@ -19,7 +19,6 @@ class Board extends Phaser.GameObjects.Container {
             .on("pointerup", this.onPointerUp)
             .on("drag", this.onDrag)
             .on("dragend", this.onDragEnd)
-            //.setPosition(200, 300)
             .setPosition(300,350)
             .setSize(this.BOARD_WIDTH * Orb.WIDTH, this.BOARD_HEIGHT * Orb.HEIGHT)
             .generateBoard();
@@ -40,9 +39,9 @@ class Board extends Phaser.GameObjects.Container {
        // console.log("pointer x =" + pointer.x);
 
         if(updateRow){
-            return parseInt((pointer.y - /*220*/ 275)/ Orb.WIDTH);
+            return parseInt((pointer.y - 275)/ Orb.WIDTH);
         }
-        return parseInt((pointer.x - /*100*/ 204) / Orb.HEIGHT);
+        return parseInt((pointer.x - 204) / Orb.HEIGHT);
     }
 
     onPointerDown(pointer, localX, localY, event) {
@@ -55,7 +54,7 @@ class Board extends Phaser.GameObjects.Container {
         this.startX = this.cursorOrb.x;
         this.startY = this.cursorOrb.y;
 
-        this.cursorOrb.setOrigin(-(localX-16-32*col)/Orb.WIDTH,-(localY-16-32*row)/Orb.HEIGHT);
+        this.cursorOrb.setOrigin(-(localX-Orb.WIDTH/2-Orb.WIDTH*col)/Orb.WIDTH,-(localY-Orb.HEIGHT/2-Orb.HEIGHT*row)/Orb.HEIGHT);
         
     }
 
@@ -67,11 +66,11 @@ class Board extends Phaser.GameObjects.Container {
         let deltaX = this.x - dragX;
         let deltaY = this.y - dragY;
 
-        if (this.startX - deltaX >= -this.width / 2 && (this.startX - deltaX <= -this.width / 2 + (this.BOARD_WIDTH - 1) * Orb.WIDTH)) {
+        if (this.startX - deltaX >= -this.displayWidth / 2 && (this.startX - deltaX <= -this.displayWidth / 2 + (this.BOARD_WIDTH - 1) * Orb.WIDTH)) {
             this.cursorOrb.setX(this.startX - deltaX);
         }
 
-        if (this.startY - deltaY >= -this.height / 2 && (this.startY - deltaY <= -this.height / 2 + (this.BOARD_HEIGHT - 1) * Orb.HEIGHT)) {
+        if (this.startY - deltaY >= -this.displayHeight / 2 && (this.startY - deltaY <= -this.displayHeight / 2 + (this.BOARD_HEIGHT - 1) * Orb.HEIGHT)) {
             this.cursorOrb.setY(this.startY - deltaY);
         }
 
@@ -142,6 +141,7 @@ class Board extends Phaser.GameObjects.Container {
             return;
 
         }
+        emitter.emit("solveComplete");
         this.setInteractive();
     }
 
@@ -298,6 +298,14 @@ class Board extends Phaser.GameObjects.Container {
             s+="\n";
         }
         console.log(s);
+    }
+
+    calculateDamage(){
+
+        let numCombos = this.comboList.length;
+
+        return numCombos * 10;
+
     }
 
 }

@@ -13,11 +13,12 @@ let config = {
             gravity: {
                 x: 0,
                 y: 0
-            }
-        }
+            },
+            //debug: true
+        },
     },
     scene: [Menu,match_screen,game_screen],
-    //pixelArt: true,
+    pixelArt: true,
     //zoom : 1
 }
 let game = new Phaser.Game(config);
