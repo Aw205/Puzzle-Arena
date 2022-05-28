@@ -35,8 +35,13 @@ class Board extends Phaser.GameObjects.Container {
 
     getPointerArrayPos(pointer,updateRow){
 
-       // console.log("pointer y =" + pointer.y);
-       // console.log("pointer x =" + pointer.x);
+        //console.log("pointer y =" + pointer.y);
+        //console.log("pointer x =" + pointer.x);
+        let vec = new Phaser.Math.Vector2(0,0);
+        this.getLocalPoint(pointer.x,pointer.y,vec);
+        console.log("local point: " + vec.x + "," + vec.y);
+        let col = 2 + vec.x/32;
+        console.log("col: " + Math.round(col));
 
         if(updateRow){
             return parseInt((pointer.y - 275)/ Orb.WIDTH);

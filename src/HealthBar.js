@@ -1,11 +1,12 @@
 class HealthBar extends Phaser.GameObjects.Graphics{
 
 
-    constructor(scene,options){
+    constructor(scene,options,width){
 
         super(scene,options);
 
         this.colors = {green: 0x00ff00, red: 0xff0000, black: 0x000000, white: 0xffffff};
+        this.width = width;
         this.value = 100;
         
         this.health_text = new Phaser.GameObjects.Text(this.scene,this.x+2,this.y+17,"100/100");
@@ -32,16 +33,16 @@ class HealthBar extends Phaser.GameObjects.Graphics{
 
         this.clear();
         this.fillStyle(this.colors["black"]); // border 
-        this.fillRect(this.x, this.y, 80, 16);
+        this.fillRect(0, 0, this.width, 16);
 
         this.fillStyle(this.colors["white"]); //background
-        this.fillRect(this.x + 2, this.y + 2, 76, 12);
+        this.fillRect(2, 2, this.width-4, 12);
 
         let healthColor = (this.value < 30) ? this.colors["red"] : this.colors["green"];
         this.fillStyle(healthColor);
 
-        var d = Math.floor(0.76 * this.value);
-        this.fillRect(this.x + 2, this.y + 2, d, 12);
+        var d = Math.floor((this.width-4) * (this.value/100));
+        this.fillRect(2,2, d, 12);
 
     }
 
