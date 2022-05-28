@@ -11,10 +11,9 @@ class game_screen extends Phaser.Scene {
 
 
         this.load.atlas("slime_idle","./assets/enemy/slime_idle3.png","./assets/enemy/slime_idle.json");
-        this.load.image("overworld", "./assets/map/Overworld.png");
-        this.load.image("slime", "./assets/slime.png");
+        this.load.image("serene_village", "./assets/map/Serene_Village.png");
         this.load.image("knight", "./assets/knight.png");
-        this.load.tilemapTiledJSON("tilemap", "./assets/map/Map.json");
+        this.load.tilemapTiledJSON("tilemap", "./assets/map/Serene_Village_Map.json");
 
     }
 
@@ -29,29 +28,12 @@ class game_screen extends Phaser.Scene {
             frameRate: 10,
             repeat: -1
         });
+        this.player = new Player(this,100,150,"knight");
+        this.createMap();
+        this.player.setDepth(10);
 
-
-
-        const map = this.make.tilemap({key: "tilemap" });
-        const tileset = map.addTilesetImage("Overworld", "overworld");
-        map.createLayer("Ground", tileset);
-        let layer = map.createLayer("Shubbery", tileset);
-        let enemyArray = map.createFromObjects("Enemy",{name: "Rock", key: "slime", classType: Enemy});
-        layer.setCollisionByProperty({collides: true});
-
-        this.player = new Player(this,50,0,"knight");
-        let pink_slime = new Enemy(this,0,0,"pink_idle");
-        pink_slime.play("pink_idle");
-
-        this.physics.add.collider(this.player,layer);
-        this.physics.add.collider(enemyArray[0],this.player,()=>{
-            this.scene.start("match_screen",{enemy: /*enemyArray[0]*/pink_slime});
-        });
-
-        
         this.cameras.main.startFollow(this.player,false,0.2,0.2);
         this.cameras.main.setZoom(2);
-        this.cameras.main.setBounds(0, 0, map.widthInPixels,map.heightInPixels);
 
         // this.player.body.setCollideWorldBounds(true);
         // this.player.body.onWorldBounds = true;   
@@ -62,13 +44,20 @@ class game_screen extends Phaser.Scene {
     createMap(){
 
         const map = this.make.tilemap({key: "tilemap" });
-        const tileset = map.addTilesetImage("Overworld", "overworld");
-        map.createLayer("Ground", tileset);
-        let layer = map.createLayer("Shubbery", tileset);
-        let enemyArray = map.createFromObjects("Enemy",{name: "Rock", key: "slime", classType: Enemy});
-        layer.setCollisionByProperty({collides: true});
+        const tileset = map.addTilesetImage("Serene_Village", "serene_village");
+        let layerNames = ["Ground","3","2","1","Houses","Above Houses"];
+        for(let name of layerNames){
+            let layer = map.createLayer(name,tileset);
+            layer.setCollisionByProperty({collides: true});
+            this.physics.add.collider(this.player,layer);
+        }
+        
+        let enemyArray = map.createFromObjects("Enemy",{name: "Slime", key: "pink_idle", classType: Enemy});
+        this.physics.add.collider(enemyArray[0],this.player,()=>{
+            this.scene.start("match_screen",{enemy: enemyArray[0]});
+        });
 
-
+        this.cameras.main.setBounds(0, 0, map.widthInPixels,map.heightInPixels);
     }
 
     update() {

@@ -41,7 +41,7 @@ class HealthBar extends Phaser.GameObjects.Graphics{
         let healthColor = (this.value < 30) ? this.colors["red"] : this.colors["green"];
         this.fillStyle(healthColor);
 
-        var d = Math.floor((this.width-4) * (this.value/100));
+        let d = Math.floor((this.width-4) * (this.value/100));
         this.fillRect(2,2, d, 12);
 
     }
