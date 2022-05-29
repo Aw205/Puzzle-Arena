@@ -10,6 +10,7 @@ class match_screen extends Phaser.Scene{
     preload(){
 
         this.load.image("board_background","./assets/board_background.png");
+        this.load.image("combat_background","./assets/combat_background.png");
         this.load.image("fire","./assets/orbs/fire.png");
         this.load.image("water","./assets/orbs/water.png");
         this.load.image("wood","./assets/orbs/wood.png");
@@ -20,6 +21,10 @@ class match_screen extends Phaser.Scene{
     create(data){
 
         this.cameras.main.setBackgroundColor("#5F9EA0");
+        //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
+        //img.setDisplaySize(640,480);
+        //this.add.existing(img);
+
         this.enemy = new Enemy(this,350,100,data.enemy.texture);
         this.enemy.setScale(10,10);
 
@@ -27,6 +32,7 @@ class match_screen extends Phaser.Scene{
         this.player_healthBar = new HealthBar(this,{x:200, y: 230},6*Orb.WIDTH);
         this.health_bar = new HealthBar(this,{x: this.game.config.width/2-50,y: 10},80);
         //this.add.image(300,350,"board_background");
+        
         this.board = new Board(this,100,100);
         this.isPlayerTurn = true;
         emitter.on("solveComplete",this.damageEnemy,this);
@@ -37,6 +43,11 @@ class match_screen extends Phaser.Scene{
 
         this.health_bar.decrease(10);
         this.displayDamageText();
+        this.enemy.play("pink_hit");
+        this.enemy.once("animationcomplete",()=>{
+            this.enemy.play("pink_idle");
+        });
+        
     }
 
     update(time,delta){
