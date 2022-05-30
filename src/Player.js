@@ -9,9 +9,11 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.cursors = this.scene.input.keyboard.createCursorKeys();
         this.VELOCITY = 100;
 
+        this.addToUpdateList();
+
     }
 
-    update(){
+    preUpdate(delta,time){
 
         if(this.cursors.left.isDown) {
             this.body.setVelocity(-this.VELOCITY, 0);

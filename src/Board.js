@@ -14,6 +14,7 @@ class Board extends Phaser.GameObjects.Container {
         this.startX = 0;
         this.startY = 0;
         this.comboList = [];
+        this.comboCount = 0;
 
         this.on("pointerdown", this.onPointerDown)
             .on("pointerup", this.onPointerUp)
@@ -187,6 +188,7 @@ class Board extends Phaser.GameObjects.Container {
             this.skyfall();
             return;
         }
+       
         let set = this.comboList.pop();
         for (let orb of set) {
             this.scene.tweens.add({
@@ -201,6 +203,7 @@ class Board extends Phaser.GameObjects.Container {
                 }
             });
         }
+        emitter.emit("updateComboText");
     }
 
     findCombos() {

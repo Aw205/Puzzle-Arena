@@ -25,23 +25,49 @@ class match_screen extends Phaser.Scene{
         //img.setDisplaySize(640,480);
         //this.add.existing(img);
 
-        this.enemy = new Enemy(this,350,100,data.enemy.texture);
+        this.comboCount = 0;
+
+        this.enemy = new Enemy(this,330,130,data.enemy.texture);
         this.enemy.setScale(10,10);
 
 
         this.player_healthBar = new HealthBar(this,{x:200, y: 230},6*Orb.WIDTH);
         this.health_bar = new HealthBar(this,{x: this.game.config.width/2-50,y: 10},80);
         //this.add.image(300,350,"board_background");
+        this.createHUD();
         
         this.board = new Board(this,100,100);
         this.isPlayerTurn = true;
-        emitter.on("solveComplete",this.damageEnemy,this);
+        emitter.on("solveComplete",this.onSolveComplete,this);
+        emitter.on("updateComboText",this.updateComboText,this);
        
+    }
+
+    createHUD(){
+
+        this.totalCombosText = new Phaser.GameObjects.Text(this,10,10,"Combos: 0",{fontSize: "30px", color: "#FFBF00"});
+        this.add.existing(this.totalCombosText);
+
+    }
+
+
+
+    onSolveComplete(){
+
+       this.damageEnemy();
+       this.comboCount = 0;
+
+    }
+
+    updateComboText(){
+
+        this.comboCount++;
+        this.totalCombosText.setText("Combos: " + this.comboCount);
     }
 
     damageEnemy(){
 
-        this.health_bar.decrease(10);
+        this.health_bar.decrease(this.comboCount*5);
         this.displayDamageText();
         this.enemy.play("pink_hit");
         this.enemy.once("animationcomplete",()=>{
@@ -60,9 +86,10 @@ class match_screen extends Phaser.Scene{
 
     displayDamageText(){
 
-        let damageText = new Phaser.GameObjects.Text(this,350,200,"10");
+        let damage = this.comboCount*5;
+        let damageText = new Phaser.GameObjects.Text(this,330,150,damage.toString());
         damageText.setColor("#FF0000");
-        damageText.setFontSize(30);
+        damageText.setFontSize(50);
         this.add.existing(damageText);
         this.tweens.add({
             targets: damageText,

@@ -55,10 +55,6 @@ class game_screen extends Phaser.Scene {
         this.cameras.main.setBounds(0, 0, map.widthInPixels,map.heightInPixels);
     }
 
-    update() {
-        player.update();
-    }
-
     createAnims(){
 
         this.anims.create({

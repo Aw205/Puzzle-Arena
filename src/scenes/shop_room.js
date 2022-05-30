@@ -13,6 +13,7 @@ class shop_room extends Phaser.Scene{
 
     create(){
 
+        this.player = new Player(this,50,50,"knight");
         this.createMap();
     }
 
@@ -25,10 +26,12 @@ class shop_room extends Phaser.Scene{
         for(let name of layerNames){
             let layer = map.createLayer(name,[interiorTileset,roomTileset]);
             layer.setCollisionByProperty({collides: true});
-            this.physics.add.collider(player,layer);
+            this.physics.add.collider(this.player,layer);
         }
 
-        this.cameras.main.startFollow(player,false,0.2,0.2);
+        this.player.setDepth(10);
+        this.cameras.main.startFollow(this.player,false,0.2,0.2);
+        this.cameras.main.setZoom(2);
         //this.cameras.main.setBounds(0, 0, map.widthInPixels,map.heightInPixels);
     }
 
