@@ -21,8 +21,9 @@ class HealthBar extends Phaser.GameObjects.Graphics{
     decrease(amount){
 
         this.value -=amount;
-        if (this.value < 0) {
+        if (this.value <= 0) {
             this.value = 0;
+            this.scene.scene.start("game_screen");
         }
         this.health_text.setText(this.value.toString() + "/100");
         this.draw();

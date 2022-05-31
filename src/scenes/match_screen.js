@@ -49,9 +49,7 @@ class match_screen extends Phaser.Scene{
         this.add.existing(this.totalCombosText);
 
     }
-
-
-
+    
     onSolveComplete(){
 
        this.damageEnemy();
@@ -87,10 +85,8 @@ class match_screen extends Phaser.Scene{
     displayDamageText(){
 
         let damage = this.comboCount*5;
-        let damageText = new Phaser.GameObjects.Text(this,330,150,damage.toString());
-        damageText.setColor("#FF0000");
-        damageText.setFontSize(50);
-        this.add.existing(damageText);
+        let damageText= this.add.text(330,150,damage,{color: "#FF0000", fontSize: 50});
+
         this.tweens.add({
             targets: damageText,
             y: damageText.y-200,
@@ -102,6 +98,4 @@ class match_screen extends Phaser.Scene{
             }
         });
     }
-
-
 }

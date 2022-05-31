@@ -185,37 +185,36 @@ class Board extends Phaser.GameObjects.Container {
     onEvent() {
 
         if(this.comboList.length==0){
-            this.skyfall();
-            return;
+            return this.skyfall();
         }
-       
         let set = this.comboList.pop();
-        for (let orb of set) {
-            this.scene.tweens.add({
-                targets: orb,
-                alpha: { from: 1, to: 0 },
-                ease: 'Sine.InOut',
-                duration: 450,
-                onCompleteScope: this,
-                onComplete: function () {
+        this.scene.tweens.add({
+            targets: set,
+            alpha: { from: 1, to: 0 },
+            ease: 'Sine.InOut',
+            duration: 450,
+            onCompleteScope: this,
+            onComplete: function () {
+                emitter.emit("updateComboText");
+                for(let orb of set){
                     this.orbArray[orb.row][orb.col] = null;
                     orb.destroy();
                 }
-            });
-        }
-        emitter.emit("updateComboText");
+            }
+        });
+        
     }
 
     findCombos() {
 
         for (let arr of this.orbArray) {
             for (let curr of arr) {
-                let comboSet = new Set();
+                let comboSet = []; //changed from set to array
                 if (!curr.isVisited) {
                     curr.isVisited = true;
                     this.floodfill(curr.row, curr.col, curr.type, comboSet);
                 }
-                if (comboSet.size > 2) {
+                if (comboSet.length > 2) {
                     this.comboList.push(comboSet);
                 }
             }
@@ -247,9 +246,9 @@ class Board extends Phaser.GameObjects.Container {
         }
         for (let arr of matches) {
             if (arr.length == 2) {
-                comboSet.add(this.orbArray[row][col]);
+                comboSet.push(this.orbArray[row][col]);
                 for (let orb of arr) {
-                    comboSet.add(orb);
+                    comboSet.push(orb);
                 }
             }
         }
@@ -295,25 +294,6 @@ class Board extends Phaser.GameObjects.Container {
 
     isInBounds(row, col) {
         return (row > -1 && row < this.BOARD_HEIGHT && col > -1 && col < this.BOARD_WIDTH);
-    }
-
-    printBoard() {
-        let s ="";
-        for (var row = 0; row < this.BOARD_HEIGHT; row++) {
-            for (var col = 0; col < this.BOARD_WIDTH; col++) {
-                  s+= (this.orbArray[row][col].type + " ");
-            }
-            s+="\n";
-        }
-        console.log(s);
-    }
-
-    calculateDamage(){
-
-        let numCombos = this.comboList.length;
-
-        return numCombos * 10;
-
     }
 
 }

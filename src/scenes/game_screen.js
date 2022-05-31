@@ -1,4 +1,4 @@
-var controls;
+
 var player;
 
 class game_screen extends Phaser.Scene {
@@ -10,6 +10,7 @@ class game_screen extends Phaser.Scene {
 
     preload() {
         
+        this.load.atlas("slime_idle1","./assets/enemy/slime_idle1.png","./assets/enemy/slime_idle1.json");
         this.load.atlas("slime_idle","./assets/enemy/slime_idle3.png","./assets/enemy/slime_idle.json");
         this.load.atlas("slime_hit","./assets/enemy/slime_hit.png","./assets/enemy/slime_hit.json");
         this.load.image("serene_village", "./assets/map/Serene_Village.png");
@@ -48,10 +49,10 @@ class game_screen extends Phaser.Scene {
         let enemyArray = map.createFromObjects("Enemy",{name: "Slime", key: "pink_idle", classType: Enemy});
         this.physics.add.collider(enemyArray[0],player,()=>{
             this.scene.start("match_screen",{enemy: enemyArray[0]});
+            //this.scene.transition({target: "match_screen", sleep: true, data: {enemy: enemyArray[0]}});
         });
 
         let entrances = map.createFromObjects("House Entrance",{name: "Entrance", classType: Entrance});
-
         this.cameras.main.setBounds(0, 0, map.widthInPixels,map.heightInPixels);
     }
 
@@ -59,12 +60,12 @@ class game_screen extends Phaser.Scene {
 
         this.anims.create({
             key: "pink_idle",
-            frames: this.anims.generateFrameNames("slime_idle",{
+            frames: this.anims.generateFrameNames("slime_idle1",{
                 prefix: "pink_",
                 start:0,
-                end: 6
+                end: 1
             }),
-            frameRate: 5,
+            frameRate: 3,
             repeat: -1
         });
 
