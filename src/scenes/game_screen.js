@@ -29,6 +29,8 @@ class game_screen extends Phaser.Scene {
         this.cameras.main.startFollow(player,false,0.2,0.2);
         this.cameras.main.setZoom(2);
 
+        emitter.on("enemyDeath",this.onEnemyDeath,this);
+
         // this.player.body.setCollideWorldBounds(true);
         // this.player.body.onWorldBounds = true;   
  
@@ -46,14 +48,19 @@ class game_screen extends Phaser.Scene {
             this.physics.add.collider(player,layer);
         }
         
-        let enemyArray = map.createFromObjects("Enemy",{name: "Slime", key: "pink_idle", classType: Enemy});
-        this.physics.add.collider(enemyArray[0],player,()=>{
-            this.scene.start("match_screen",{enemy: enemyArray[0]});
-            //this.scene.transition({target: "match_screen", sleep: true, data: {enemy: enemyArray[0]}});
+        this.enemyArray = map.createFromObjects("Enemy",{name: "Slime", key: "pink_idle", classType: Enemy});
+        this.physics.add.collider(this.enemyArray[0],player,()=>{
+            this.scene.transition({target: "match_screen", duration: 0, sleep: true, data: {enemy: this.enemyArray[0]}});
         });
 
         let entrances = map.createFromObjects("House Entrance",{name: "Entrance", classType: Entrance});
         this.cameras.main.setBounds(0, 0, map.widthInPixels,map.heightInPixels);
+    }
+
+    onEnemyDeath(){
+
+        this.enemyArray[0].destroy();
+
     }
 
     createAnims(){

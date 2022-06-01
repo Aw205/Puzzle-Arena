@@ -20,12 +20,14 @@ class match_screen extends Phaser.Scene{
 
     create(data){
 
+       // this.cameras.main.fadeIn(1000);
         this.cameras.main.setBackgroundColor("#5F9EA0");
         //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
         //img.setDisplaySize(640,480);
         //this.add.existing(img);
 
         this.comboCount = 0;
+        this.data = data;
 
         this.enemy = new Enemy(this,330,130,data.enemy.texture);
         this.enemy.setScale(10,10);
