@@ -9,6 +9,9 @@ class match_screen extends Phaser.Scene{
 
     preload(){
 
+
+        this.load.audio("orbSwap","./assets/audio/orbSwap.wav");
+        this.load.audio("orbCombo","./assets/audio/orbCombo.wav");
         this.load.image("board_background","./assets/board_background.png");
         this.load.image("combat_background","./assets/combat_background.png");
         this.load.image("fire","./assets/orbs/fire.png");

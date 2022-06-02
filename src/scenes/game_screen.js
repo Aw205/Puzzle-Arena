@@ -49,9 +49,11 @@ class game_screen extends Phaser.Scene {
         }
         
         this.enemyArray = map.createFromObjects("Enemy",{name: "Slime", key: "pink_idle", classType: Enemy});
-        this.physics.add.collider(this.enemyArray[0],player,()=>{
-            this.scene.transition({target: "match_screen", duration: 0, sleep: true, data: {enemy: this.enemyArray[0]}});
-        });
+        for(let slime of this.enemyArray){
+            this.physics.add.collider(slime,player,()=>{
+                this.scene.transition({target: "match_screen", duration: 0, sleep: true, data: {enemy: slime}});
+            });
+        }
 
         let entrances = map.createFromObjects("House Entrance",{name: "Entrance", classType: Entrance});
         this.cameras.main.setBounds(0, 0, map.widthInPixels,map.heightInPixels);

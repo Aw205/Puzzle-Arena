@@ -83,6 +83,8 @@ class Board extends Phaser.GameObjects.Container {
         let current = this.orbArray[row][col];
         if (current != this.cursorOrb) {
 
+            this.scene.sound.play("orbSwap",{volume: 0.1});
+
             [this.cursorOrb.startPos, current.startPos] = [current.startPos, this.cursorOrb.startPos];
             current.setPosition(current.startPos.x, current.startPos.y);
 
@@ -187,6 +189,7 @@ class Board extends Phaser.GameObjects.Container {
         if(this.comboList.length==0){
             return this.skyfall();
         }
+        this.scene.sound.play("orbCombo");
         let set = this.comboList.pop();
         this.scene.tweens.add({
             targets: set,
