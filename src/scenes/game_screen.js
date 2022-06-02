@@ -9,7 +9,8 @@ class game_screen extends Phaser.Scene {
     }
 
     preload() {
-        
+
+        this.load.atlas("player_run","./assets/player/Alex_run_16x16.png","./assets/player/player_run.json");
         this.load.atlas("slime_idle1","./assets/enemy/slime_idle1.png","./assets/enemy/slime_idle1.json");
         this.load.atlas("slime_idle","./assets/enemy/slime_idle3.png","./assets/enemy/slime_idle.json");
         this.load.atlas("slime_hit","./assets/enemy/slime_hit.png","./assets/enemy/slime_hit.json");
@@ -22,7 +23,7 @@ class game_screen extends Phaser.Scene {
     create() {
         this.createAnims();
 
-        player = new Player(this,100,150,"knight");
+        player = new Player(this,100,150,"run_up");
         this.createMap();
         player.setDepth(10);
 
@@ -86,6 +87,47 @@ class game_screen extends Phaser.Scene {
             }),
             frameRate: 2,
             repeat: 0
+        });
+
+        this.anims.create({
+            key: "run_left",
+            frames: this.anims.generateFrameNames("player_run",{
+                prefix: "run_left_",
+                start: 0,
+                end:5
+            }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: "run_right",
+            frames: this.anims.generateFrameNames("player_run",{
+                prefix: "run_right_",
+                start: 0,
+                end:5
+            }),
+            frameRate:10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: "run_up",
+            frames: this.anims.generateFrameNames("player_run",{
+                prefix: "run_up_",
+                start: 0,
+                end: 5
+            }),
+            frameRate: 10,
+            repeat: -1
+        });
+        this.anims.create({
+            key: "run_down",
+            frames: this.anims.generateFrameNames("player_run",{
+                prefix: "run_down_",
+                start: 0,
+                end:2
+            }),
+            frameRate:5,
+            repeat: -1
         });
 
     }

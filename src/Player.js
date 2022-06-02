@@ -9,24 +9,32 @@ class Player extends Phaser.Physics.Arcade.Sprite{
         this.body.setSize(10,10);
         this.cursors = this.scene.input.keyboard.createCursorKeys();
         this.VELOCITY = 100;
+        this.play("run_up");
 
         this.addToUpdateList();
 
     }
 
-    preUpdate(delta,time){
+    preUpdate(time,delta){
 
-        if(this.cursors.left.isDown) {
+        super.preUpdate(time,delta);
+    
+         if(this.cursors.left.isDown) {
             this.body.setVelocity(-this.VELOCITY, 0);
+            this.play("run_left",true);
         } else if(this.cursors.right.isDown) {
             this.body.setVelocity(this.VELOCITY, 0);
+            this.play("run_right",true);
         } else if(this.cursors.up.isDown) {
             this.body.setVelocity(0, -this.VELOCITY);
+            this.play("run_up",true);
         } else if(this.cursors.down.isDown) {
             this.body.setVelocity(0, this.VELOCITY);
+            this.play("run_down",true);
         } else if (!this.cursors.right.isDown && !this.cursors.left.isDown && !this.cursors.up.isDown && !this.cursors.down.isDown) {
             this.body.setVelocity(0, 0);
-        }
+            this.stopAfterRepeat(0);
+        } 
 
     }
 
