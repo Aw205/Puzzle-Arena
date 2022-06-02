@@ -41,13 +41,12 @@ class game_screen extends Phaser.Scene {
 
         const map = this.make.tilemap({key: "tilemap" });
         const tileset = map.addTilesetImage("Serene_Village", "serene_village");
-        let layerNames = ["Ground","3","2","1","Houses","Above Houses"];
+        let layerNames = ["Ground","4","3","2","1","Houses","Above Houses"];
         for(let name of layerNames){
             let layer = map.createLayer(name,tileset);
             layer.setCollisionByProperty({collides: true});
             this.physics.add.collider(player,layer);
         }
-        
         this.enemyArray = map.createFromObjects("Enemy",{name: "Slime", key: "pink_idle", classType: Enemy});
         for(let slime of this.enemyArray){
             this.physics.add.collider(slime,player,()=>{
@@ -61,6 +60,7 @@ class game_screen extends Phaser.Scene {
 
     onEnemyDeath(){
 
+        this.sound.play("slime_death");
         this.enemyArray[0].destroy();
 
     }

@@ -75,7 +75,6 @@ class Board extends Phaser.GameObjects.Container {
         if (this.startX - deltaX >= -this.displayWidth / 2 && (this.startX - deltaX <= -this.displayWidth / 2 + (this.BOARD_WIDTH - 1) * Orb.WIDTH)) {
             this.cursorOrb.setX(this.startX - deltaX);
         }
-
         if (this.startY - deltaY >= -this.displayHeight / 2 && (this.startY - deltaY <= -this.displayHeight / 2 + (this.BOARD_HEIGHT - 1) * Orb.HEIGHT)) {
             this.cursorOrb.setY(this.startY - deltaY);
         }

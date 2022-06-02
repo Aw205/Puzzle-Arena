@@ -9,9 +9,10 @@ class match_screen extends Phaser.Scene{
 
     preload(){
 
-
         this.load.audio("orbSwap","./assets/audio/orbSwap.wav");
         this.load.audio("orbCombo","./assets/audio/orbCombo.wav");
+        this.load.audio("slime_hit","./assets/audio/sfx_slime_hit.wav");
+        this.load.audio("slime_death","./assets/audio/sfx_slime_death.wav");
         this.load.image("board_background","./assets/board_background.png");
         this.load.image("combat_background","./assets/combat_background.png");
         this.load.image("fire","./assets/orbs/fire.png");
@@ -23,7 +24,7 @@ class match_screen extends Phaser.Scene{
 
     create(data){
 
-       // this.cameras.main.fadeIn(1000);
+        this.cameras.main.fadeIn(1000);
         this.cameras.main.setBackgroundColor("#5F9EA0");
         //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
         //img.setDisplaySize(640,480);
@@ -72,6 +73,7 @@ class match_screen extends Phaser.Scene{
 
         this.health_bar.decrease(this.comboCount*5);
         this.displayDamageText();
+        this.sound.play("slime_hit");
         this.enemy.play("pink_hit");
         this.enemy.once("animationcomplete",()=>{
             this.enemy.play("pink_idle");
@@ -90,10 +92,11 @@ class match_screen extends Phaser.Scene{
     displayDamageText(){
 
         let damage = this.comboCount*5;
-        let damageText= this.add.text(330,150,damage,{color: "#FF0000", fontSize: 50});
+        let damageText= this.add.text(350,150,damage,{color: "#FF0000", fontSize: 50});
 
         this.tweens.add({
             targets: damageText,
+            x: damageText.x+100,
             y: damageText.y-200,
             alpha: 0,
             duration: 2000,
