@@ -26,8 +26,6 @@ class Board extends Phaser.GameObjects.Container {
 
         this.setInteractive({ draggable: true });
 
-        this.rect = this.getBounds();
-
         this.scene.physics.add.existing(this);
         this.scene.add.existing(this);
 
@@ -148,8 +146,9 @@ class Board extends Phaser.GameObjects.Container {
             return;
 
         }
+        this.tweenBoardAlpha(0.6);
         emitter.emit("solveComplete");
-        this.setInteractive();
+        //this.setInteractive();
     }
 
     resetBoardState() {
@@ -292,6 +291,19 @@ class Board extends Phaser.GameObjects.Container {
             dropDist = 0;
         }
         this.solveBoard(); 
+    }
+
+
+    tweenBoardAlpha(alph){
+
+        for(let arr of this.orbArray){    
+                this.scene.tweens.add({
+                    targets: arr,
+                    alpha: alph,
+                    duration: 1000,
+                    ease: "Quad.easeIn",
+                     });
+            }
     }
 
     isInBounds(row, col) {

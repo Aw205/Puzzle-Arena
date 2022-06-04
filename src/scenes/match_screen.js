@@ -9,17 +9,7 @@ class match_screen extends Phaser.Scene{
 
     preload(){
 
-        this.load.audio("orbSwap","./assets/audio/orbSwap.wav");
-        this.load.audio("orbCombo","./assets/audio/orbCombo.wav");
-        this.load.audio("slime_hit","./assets/audio/sfx_slime_hit.wav");
-        this.load.audio("slime_death","./assets/audio/sfx_slime_death.wav");
-        this.load.image("board_background","./assets/board_background.png");
-        this.load.image("combat_background","./assets/combat_background.png");
-        this.load.image("fire","./assets/orbs/fire.png");
-        this.load.image("water","./assets/orbs/water.png");
-        this.load.image("wood","./assets/orbs/wood.png");
-        this.load.image("dark","./assets/orbs/dark.png");
-        this.load.image("light","./assets/orbs/light.png"); 
+        this.loadAssets();
     }
 
     create(data){
@@ -39,12 +29,12 @@ class match_screen extends Phaser.Scene{
 
         this.player_healthBar = new HealthBar(this,{x:200, y: 230},6*Orb.WIDTH);
         this.health_bar = new HealthBar(this,{x: this.game.config.width/2-50,y: 10},80);
-        //this.add.image(300,350,"board_background");
-        this.createHUD();
         
+        this.createHUD();
         this.board = new Board(this,100,100);
-        this.isPlayerTurn = true;
+
         emitter.on("solveComplete",this.onSolveComplete,this);
+        emitter.on("playerTurn",this.onPlayerTurn,this);
         emitter.on("updateComboText",this.updateComboText,this);
        
     }
@@ -60,6 +50,19 @@ class match_screen extends Phaser.Scene{
 
        this.damageEnemy();
        this.comboCount = 0;
+       this.time.delayedCall(2000,()=>{
+           emitter.emit("enemy_turn");
+       },
+       this);
+       
+    }
+
+    onPlayerTurn(){
+
+        this.board.tweenBoardAlpha(1);
+        this.board.setInteractive();
+        //set interactive
+
 
     }
 
@@ -93,7 +96,6 @@ class match_screen extends Phaser.Scene{
 
         let damage = this.comboCount*5;
         let damageText= this.add.text(350,150,damage,{color: "#FF0000", fontSize: 50});
-
         this.tweens.add({
             targets: damageText,
             x: damageText.x+100,
@@ -105,5 +107,21 @@ class match_screen extends Phaser.Scene{
                 damageText.destroy();
             }
         });
+    }
+
+
+    loadAssets(){
+
+        this.load.audio("player_hit","./assets/audio/sfx_player_hit.wav");
+        this.load.audio("orbSwap","./assets/audio/orbSwap.wav");
+        this.load.audio("orbCombo","./assets/audio/orbCombo.wav");
+        this.load.audio("slime_hit","./assets/audio/sfx_slime_hit.wav");
+        this.load.audio("slime_death","./assets/audio/sfx_slime_death.wav");
+        this.load.image("fire","./assets/orbs/fire.png");
+        this.load.image("water","./assets/orbs/water.png");
+        this.load.image("wood","./assets/orbs/wood.png");
+        this.load.image("dark","./assets/orbs/dark.png");
+        this.load.image("light","./assets/orbs/light.png"); 
+
     }
 }

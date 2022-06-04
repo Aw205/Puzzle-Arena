@@ -14,8 +14,8 @@ class game_screen extends Phaser.Scene {
         this.load.atlas("slime_idle1","./assets/enemy/slime_idle1.png","./assets/enemy/slime_idle1.json");
         this.load.atlas("slime_idle","./assets/enemy/slime_idle3.png","./assets/enemy/slime_idle.json");
         this.load.atlas("slime_hit","./assets/enemy/slime_hit.png","./assets/enemy/slime_hit.json");
+        this.load.atlas("slime_swallow","./assets/enemy/slime_swallow.png","./assets/enemy/slime_swallow.json");
         this.load.image("serene_village", "./assets/map/Serene_Village.png");
-        this.load.image("knight", "./assets/knight.png");
         this.load.tilemapTiledJSON("tilemap", "./assets/map/Serene_Village_Map.json");
 
     }
@@ -128,6 +128,16 @@ class game_screen extends Phaser.Scene {
             }),
             frameRate:5,
             repeat: -1
+        });
+
+        this.anims.create({
+            key: "pink_swallow",
+            frames: this.anims.generateFrameNames("slime_swallow",{
+                prefix: "pink_",
+                start: 0,
+                end:13
+            }),
+            frameRate:12
         });
 
     }
