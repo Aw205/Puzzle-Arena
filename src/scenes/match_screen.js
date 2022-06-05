@@ -2,13 +2,13 @@
 
 class match_screen extends Phaser.Scene{
 
-    constructor(sprite){
+    constructor(){
         super("match_screen");
 
         emitter.on("solveComplete",this.onSolveComplete,this);
         emitter.on("playerTurn",this.onPlayerTurn,this);
-        emitter.on("updateComboText",this.updateComboText,this);
-        emitter.on("enemyDeath",this.onEnemyDeath,this); //test
+        emitter.on("comboMatched",this.onComboMatched,this);
+        emitter.on("enemyDeath",this.onEnemyDeath,this); 
 
     }
 
@@ -29,6 +29,8 @@ class match_screen extends Phaser.Scene{
         this.health_bar = new HealthBar(this,{x: this.game.config.width/2-50,y: 10},80);
         this.createHUD();
         this.board = new Board(this,100,100);
+
+        this.colors = ["#FF0000","#0096FF","#50C878","#702963","#FFBF00"];
 
          //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
         //img.setDisplaySize(640,480);
@@ -52,14 +54,11 @@ class match_screen extends Phaser.Scene{
     }
     
     onSolveComplete(){
-
-       this.damageEnemy();
        this.comboCount = 0;
        this.time.delayedCall(2000,()=>{
            emitter.emit("enemy_turn");
        },
        this);
-       
     }
 
     onPlayerTurn(){
@@ -67,18 +66,18 @@ class match_screen extends Phaser.Scene{
         this.board.setInteractive();
     }
 
-    updateComboText(){
-
+    onComboMatched(color,numOrbs){
         this.totalCombosText.setText("Combos: " + ++this.comboCount);
-        this.displayDamageText();
+        const damage = numOrbs *2;
+        this.displayDamageText(color,damage);
+        this.damageEnemy(damage);
+        this.enemy.play("pink_hit",true);
     }
 
-    damageEnemy(){
+    damageEnemy(damage){
 
-        this.health_bar.decrease(this.comboCount*5);
-        this.displayDamageText();
+        this.health_bar.decrease(damage);
         this.sound.play("slime_hit");
-        this.enemy.play("pink_hit");
         this.enemy.chain("pink_idle");
     }
 
@@ -89,16 +88,17 @@ class match_screen extends Phaser.Scene{
         }
     }
 
-    displayDamageText(){
+    displayDamageText(color,damage){
 
-        let damage = this.comboCount*5;
-        let damageText= this.add.text(350,150,damage,{color: "#FF0000", fontSize: 50});
+        const posX = Phaser.Math.Between(250,350);
+        const posY = Phaser.Math.Between(100,150);
+        let damageText= this.add.text(posX,posY,damage,{color: this.colors[color], fontSize: 50});
         this.tweens.add({
             targets: damageText,
-            x: damageText.x+100,
-            y: damageText.y-200,
+            x: damageText.x+ Phaser.Math.Between(-100,100),
+            y: damageText.y - Phaser.Math.Between(200,100),
             alpha: 0,
-            duration: 2000,
+            duration: 1000,
             ease: "Quad.easeIn",
             onComplete: function(){
                 damageText.destroy();

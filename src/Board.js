@@ -193,7 +193,7 @@ class Board extends Phaser.GameObjects.Container {
             duration: 450,
             onCompleteScope: this,
             onComplete: function () {
-                emitter.emit("updateComboText");
+                emitter.emit("comboMatched",set[0].type,set.length);
                 for (let orb of set) {
                     this.orbArray[orb.row][orb.col] = null;
                     orb.destroy();

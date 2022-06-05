@@ -30,8 +30,8 @@ class game_screen extends Phaser.Scene {
         this.cameras.main.startFollow(player,false,0.2,0.2);
         this.cameras.main.setZoom(2);
 
-        // this.player.body.setCollideWorldBounds(true);
-        // this.player.body.onWorldBounds = true;   
+        // player.body.setCollideWorldBounds(true);
+        // player.body.onWorldBounds = true;   
  
 
     }
