@@ -114,11 +114,11 @@ class match_screen extends Phaser.Scene{
         this.load.audio("orbCombo","./assets/audio/orbCombo.wav");
         this.load.audio("slime_hit","./assets/audio/sfx_slime_hit.wav");
         this.load.audio("slime_death","./assets/audio/sfx_slime_death.wav");
-        this.load.image("fire","./assets/orbs/fire.png");
-        this.load.image("water","./assets/orbs/water.png");
-        this.load.image("wood","./assets/orbs/wood.png");
-        this.load.image("dark","./assets/orbs/dark.png");
-        this.load.image("light","./assets/orbs/light.png"); 
+        this.load.image("fire","./assets/orbs/Fire.png");
+        this.load.image("water","./assets/orbs/Water.png");
+        this.load.image("wood","./assets/orbs/Wood.png");
+        this.load.image("dark","./assets/orbs/Dark.png");
+        this.load.image("light","./assets/orbs/Light.png"); 
 
     }
 }
