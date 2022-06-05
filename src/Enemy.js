@@ -5,6 +5,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
 
         this.scene.add.existing(this);
         this.scene.physics.add.existing(this);
+
         this.play("pink_idle");
         this.setImmovable(true);
         emitter.on("enemy_turn",this.attackPlayer,this);
@@ -24,9 +25,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
 
         this.scene.sound.play("slime_hit");
         this.play("pink_hit");
-        this.once("animationcomplete",()=>{
-            this.enemy.play("pink_idle");
-        });
+        this.chain("pink_idle");
 
     }
     

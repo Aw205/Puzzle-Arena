@@ -30,8 +30,6 @@ class game_screen extends Phaser.Scene {
         this.cameras.main.startFollow(player,false,0.2,0.2);
         this.cameras.main.setZoom(2);
 
-        emitter.on("enemyDeath",this.onEnemyDeath,this);
-
         // this.player.body.setCollideWorldBounds(true);
         // this.player.body.onWorldBounds = true;   
  
@@ -54,16 +52,8 @@ class game_screen extends Phaser.Scene {
                 this.scene.transition({target: "match_screen", duration: 0, sleep: true, data: {enemy: slime}});
             });
         }
-
         let entrances = map.createFromObjects("House Entrance",{name: "Entrance", classType: Entrance});
         this.cameras.main.setBounds(0, 0, map.widthInPixels,map.heightInPixels);
-    }
-
-    onEnemyDeath(){
-
-        this.sound.play("slime_death");
-        this.enemyArray[0].destroy();
-
     }
 
     createAnims(){

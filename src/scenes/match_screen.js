@@ -1,14 +1,18 @@
-var emitter = new Phaser.Events.EventEmitter();
+
 
 class match_screen extends Phaser.Scene{
 
     constructor(sprite){
         super("match_screen");
 
+        emitter.on("solveComplete",this.onSolveComplete,this);
+        emitter.on("playerTurn",this.onPlayerTurn,this);
+        emitter.on("updateComboText",this.updateComboText,this);
+        emitter.on("enemyDeath",this.onEnemyDeath,this); //test
+
     }
 
     preload(){
-
         this.loadAssets();
     }
 
@@ -16,27 +20,28 @@ class match_screen extends Phaser.Scene{
 
         this.cameras.main.fadeIn(1000);
         this.cameras.main.setBackgroundColor("#5F9EA0");
-        //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
-        //img.setDisplaySize(640,480);
-        //this.add.existing(img);
-
         this.comboCount = 0;
         this.data = data;
 
-        this.enemy = new Enemy(this,330,130,data.enemy.texture);
-        this.enemy.setScale(10,10);
-
+        this.enemy = new Enemy(this,330,130,data.enemy.texture).setScale(10,10);
 
         this.player_healthBar = new HealthBar(this,{x:200, y: 230},6*Orb.WIDTH);
         this.health_bar = new HealthBar(this,{x: this.game.config.width/2-50,y: 10},80);
-        
         this.createHUD();
         this.board = new Board(this,100,100);
 
-        emitter.on("solveComplete",this.onSolveComplete,this);
-        emitter.on("playerTurn",this.onPlayerTurn,this);
-        emitter.on("updateComboText",this.updateComboText,this);
+         //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
+        //img.setDisplaySize(640,480);
+        //this.add.existing(img);
        
+    }
+
+    onEnemyDeath(){
+
+        emitter.off("enemy_turn");
+        emitter.off("damage_enemy");
+        this.sound.play("slime_death");
+        this.data.enemy.destroy();
     }
 
     createHUD(){
@@ -58,18 +63,14 @@ class match_screen extends Phaser.Scene{
     }
 
     onPlayerTurn(){
-
         this.board.tweenBoardAlpha(1);
         this.board.setInteractive();
-        //set interactive
-
-
     }
 
     updateComboText(){
 
-        this.comboCount++;
-        this.totalCombosText.setText("Combos: " + this.comboCount);
+        this.totalCombosText.setText("Combos: " + ++this.comboCount);
+        this.displayDamageText();
     }
 
     damageEnemy(){
@@ -78,10 +79,7 @@ class match_screen extends Phaser.Scene{
         this.displayDamageText();
         this.sound.play("slime_hit");
         this.enemy.play("pink_hit");
-        this.enemy.once("animationcomplete",()=>{
-            this.enemy.play("pink_idle");
-        });
-        
+        this.enemy.chain("pink_idle");
     }
 
     update(time,delta){
@@ -90,7 +88,6 @@ class match_screen extends Phaser.Scene{
             this.board.list[i].update();
         }
     }
-
 
     displayDamageText(){
 

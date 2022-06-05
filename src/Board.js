@@ -20,7 +20,7 @@ class Board extends Phaser.GameObjects.Container {
             .on("pointerup", this.onPointerUp)
             .on("drag", this.onDrag)
             .on("dragend", this.onDragEnd)
-            .setPosition(300,350)
+            .setPosition(300, 350)
             .setSize(this.BOARD_WIDTH * Orb.WIDTH, this.BOARD_HEIGHT * Orb.HEIGHT)
             .generateBoard();
 
@@ -32,7 +32,7 @@ class Board extends Phaser.GameObjects.Container {
 
     }
 
-    getPointerArrayPos(pointer,updateRow){
+    getPointerArrayPos(pointer, updateRow) {
 
         //console.log("pointer y =" + pointer.y);
         //console.log("pointer x =" + pointer.x);
@@ -42,30 +42,30 @@ class Board extends Phaser.GameObjects.Container {
         //let col = 2 + vec.x/32;
         //console.log("col: " + Math.round(col));
 
-        if(updateRow){
-            return parseInt((pointer.y - 275)/ Orb.WIDTH);
+        if (updateRow) {
+            return parseInt((pointer.y - 275) / Orb.WIDTH);
         }
         return parseInt((pointer.x - 204) / Orb.HEIGHT);
     }
 
     onPointerDown(pointer, localX, localY, event) {
 
-        let row = this.getPointerArrayPos(pointer,true);
-        let col = this.getPointerArrayPos(pointer,false);
+        let row = this.getPointerArrayPos(pointer, true);
+        let col = this.getPointerArrayPos(pointer, false);
 
         this.cursorOrb = this.orbArray[row][col];
         this.cursorOrb.setPointerDownDisplayState();
         this.startX = this.cursorOrb.x;
         this.startY = this.cursorOrb.y;
 
-        this.cursorOrb.setOrigin(-(localX-Orb.WIDTH/2-Orb.WIDTH*col)/Orb.WIDTH,-(localY-Orb.HEIGHT/2-Orb.HEIGHT*row)/Orb.HEIGHT);
-        
+        this.cursorOrb.setOrigin(-(localX - Orb.WIDTH / 2 - Orb.WIDTH * col) / Orb.WIDTH, -(localY - Orb.HEIGHT / 2 - Orb.HEIGHT * row) / Orb.HEIGHT);
+
     }
 
     onDrag(pointer, dragX, dragY) {
 
-        let row = this.getPointerArrayPos(pointer,true);
-        let col = this.getPointerArrayPos(pointer,false);
+        let row = this.getPointerArrayPos(pointer, true);
+        let col = this.getPointerArrayPos(pointer, false);
 
         let deltaX = this.x - dragX;
         let deltaY = this.y - dragY;
@@ -80,7 +80,7 @@ class Board extends Phaser.GameObjects.Container {
         let current = this.orbArray[row][col];
         if (current != this.cursorOrb) {
 
-            this.scene.sound.play("orbSwap",{volume: 0.1});
+            this.scene.sound.play("orbSwap", { volume: 0.1 });
 
             [this.cursorOrb.startPos, current.startPos] = [current.startPos, this.cursorOrb.startPos];
             current.setPosition(current.startPos.x, current.startPos.y);
@@ -141,14 +141,11 @@ class Board extends Phaser.GameObjects.Container {
 
         this.resetBoardState();
         let numCombos = this.findCombos();
-        if(numCombos>0){
-            this.fadeCombos();
-            return;
-
+        if (numCombos > 0) {
+            return this.fadeCombos();
         }
         this.tweenBoardAlpha(0.6);
         emitter.emit("solveComplete");
-        //this.setInteractive();
     }
 
     resetBoardState() {
@@ -184,7 +181,7 @@ class Board extends Phaser.GameObjects.Container {
 
     onEvent() {
 
-        if(this.comboList.length==0){
+        if (this.comboList.length == 0) {
             return this.skyfall();
         }
         this.scene.sound.play("orbCombo");
@@ -197,13 +194,13 @@ class Board extends Phaser.GameObjects.Container {
             onCompleteScope: this,
             onComplete: function () {
                 emitter.emit("updateComboText");
-                for(let orb of set){
+                for (let orb of set) {
                     this.orbArray[orb.row][orb.col] = null;
                     orb.destroy();
                 }
             }
         });
-        
+
     }
 
     findCombos() {
@@ -277,7 +274,7 @@ class Board extends Phaser.GameObjects.Container {
 
                 let current = this.skyfallArray[r][col];
                 let newRow = r - this.BOARD_HEIGHT + dropDist;
-               
+
                 current.setVisible(true);
                 current.targetPos.set(current.x, -this.height / 2 + (newRow) * Orb.HEIGHT);
 
@@ -290,20 +287,17 @@ class Board extends Phaser.GameObjects.Container {
             }
             dropDist = 0;
         }
-        this.solveBoard(); 
+        this.solveBoard();
     }
 
 
-    tweenBoardAlpha(alph){
-
-        for(let arr of this.orbArray){    
-                this.scene.tweens.add({
-                    targets: arr,
-                    alpha: alph,
-                    duration: 1000,
-                    ease: "Quad.easeIn",
-                     });
-            }
+    tweenBoardAlpha(alph) {
+        this.scene.tweens.add({
+            targets: this.list,
+            alpha: alph,
+            duration: 1000,
+            ease: "Quad.easeIn",
+        });
     }
 
     isInBounds(row, col) {

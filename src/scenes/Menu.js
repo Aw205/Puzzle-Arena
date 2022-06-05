@@ -1,3 +1,4 @@
+var emitter = new Phaser.Events.EventEmitter();
 var music_isPlaying = false;
 
 class Menu extends Phaser.Scene{

@@ -11,12 +11,10 @@ class Entrance extends Phaser.Physics.Arcade.Image{
     }
 
     onCollision(entrance,player){
-
-        //console.log("going to " + this.data.get("destination"));
+        
         let sceneName = this.data.get("destination");
         this.scene.scene.start(sceneName);
 
-       
     }
 
 }
