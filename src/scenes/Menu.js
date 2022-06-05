@@ -1,4 +1,5 @@
 var emitter = new Phaser.Events.EventEmitter();
+var backgroundMusic;
 var music_isPlaying = false;
 
 class Menu extends Phaser.Scene{
@@ -11,13 +12,15 @@ class Menu extends Phaser.Scene{
 
         this.load.audio("button_click","./assets/audio/button_click.wav");
         this.load.audio("music","./assets/audio/puzzle_arena.mp3"); 
+        this.load.audio("happy","./assets/audio/happy_vibe.ogg"); 
         //this.load.image("menu_background","./assets/menu_background.png");
     }
 
     create(){
 
          if(!music_isPlaying){
-            this.sound.play("music",{loop: true});
+            this.sound.play("happy",{loop: true, volume: 0.6});
+            this.sound.add("music",{loop:true});
             music_isPlaying=true;
         }
 

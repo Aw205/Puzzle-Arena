@@ -14,22 +14,11 @@ class Orb extends Phaser.Physics.Arcade.Sprite{
         this.row = row;
         this.col= col;  
         this.isVisited = false;
-        this.targetPos = new Phaser.Math.Vector2(0,0); // not in rows/col
         this.startPos = new Phaser.Math.Vector2(x,y);
 
         this.scene.physics.add.existing(this);
         this.scene.add.existing(this);
 
-    }
-
-    update(){
-
-        let dist = Phaser.Math.Distance.Between(this.x, this.y, this.targetPos.x, this.targetPos.y);
-        if(this.body.speed>0){
-            if(dist<2){
-                this.body.reset(this.targetPos.x,this.targetPos.y);
-            }
-        }
     }
 
     setPointerDownDisplayState(){

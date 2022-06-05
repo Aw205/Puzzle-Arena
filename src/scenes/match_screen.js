@@ -23,6 +23,17 @@ class match_screen extends Phaser.Scene{
         this.comboCount = 0;
         this.data = data;
 
+        this.tweens.add({
+            targets:  this.sound.get("happy"),
+            volume:   0,
+            duration: 500,
+            onComplete: ()=>{
+                this.sound.stopByKey("happy");
+                this.sound.play("music");
+
+            }
+        });
+
         this.enemy = new Enemy(this,330,130,data.enemy.texture).setScale(10,10);
 
         this.player_healthBar = new HealthBar(this,{x:200, y: 230},6*Orb.WIDTH);
@@ -41,6 +52,17 @@ class match_screen extends Phaser.Scene{
     }
 
     onEnemyDeath(){
+
+        this.tweens.add({
+            targets:  this.sound.get("music"),
+            volume:   0,
+            duration: 1000,
+            onComplete: ()=>{
+                this.sound.stopByKey("music");
+                this.sound.play("happy");
+
+            }
+        });
 
         emitter.off("enemy_turn");
         emitter.off("damage_enemy");
@@ -72,7 +94,6 @@ class match_screen extends Phaser.Scene{
         this.totalCombosText.setText("Combos: " + ++this.comboCount);
         const damage = numOrbs *2;
         this.playDamageAnimation(color,damage,startPos);
-        //this.displayDamageText(color,damage);
 
         this.damageEnemy(damage);
         this.enemy.play("pink_hit",true);
@@ -85,14 +106,6 @@ class match_screen extends Phaser.Scene{
         this.enemy.chain("pink_idle");
     }
 
-    update(time,delta){
-
-        for(var i=0;i<this.board.length;i++){
-            this.board.list[i].update();
-        }
-    }
-
-
     playDamageAnimation(color,damage,startPos){
 
         const targetX = Phaser.Math.Between(250,350);
@@ -102,8 +115,6 @@ class match_screen extends Phaser.Scene{
 
 
     }
-
-
 
     displayDamageText(color,damage,posX,posY){
   
@@ -133,9 +144,10 @@ class match_screen extends Phaser.Scene{
             scale: { random: true, start: 1, end: 0 },
             blendMode: "ADD"
         });
-
-        const xVals = [startPos.x,targetX/2,targetX];
-		const yVals = [startPos.y,targetY/2,targetY];
+        const midX = Phaser.Math.Between(targetX/2,targetX + targetX/2);
+        const midY = Phaser.Math.Between(startPos.y,targetY);
+        const xVals = [startPos.x,midX,targetX];
+		const yVals = [startPos.y,midY,targetY];
 
         this.tweens.addCounter({
             from:0,

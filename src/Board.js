@@ -184,9 +184,6 @@ class Board extends Phaser.GameObjects.Container {
         const containerX = this.x;
         const containerY = this.y;
 
-        console.log("containerX: "  + this.x);
-        console.log("containerY: " + this.y);
-
         if (this.comboList.length == 0) {
             return this.skyfall();
         }
@@ -270,10 +267,15 @@ class Board extends Phaser.GameObjects.Container {
                     dropDist++;
                 }
                 else {
-                    current.targetPos.set(current.x, -this.height / 2 + (row + dropDist) * Orb.HEIGHT);
-                    this.scene.physics.moveToObject(current, current.targetPos, 60, 500);
+                    this.scene.tweens.add({
+                        targets: current,
+                        y: -this.height/2 + (row + dropDist) * Orb.HEIGHT,
+                        duration: 500,
+                        ease: Phaser.Math.Easing.Linear,
+                    });
+
                     current.row += dropDist;
-                    current.startPos.set(current.x, current.targetPos.y);
+                    current.startPos.set(current.x, -this.height/2 + (row + dropDist) * Orb.HEIGHT);
                     [current, this.orbArray[row + dropDist][col]] = [this.orbArray[row + dropDist][col], current];
                 }
             }
@@ -284,13 +286,17 @@ class Board extends Phaser.GameObjects.Container {
                 let newRow = r - this.BOARD_HEIGHT + dropDist;
 
                 current.setVisible(true);
-                current.targetPos.set(current.x, -this.height / 2 + (newRow) * Orb.HEIGHT);
+                this.scene.tweens.add({
+                    targets: current,
+                    y: -this.height/2 + (newRow) * Orb.HEIGHT,
+                    duration: 500,
+                    ease: Phaser.Math.Easing.Linear
+                });
 
                 current.row = newRow;
-                current.startPos.set(current.x, current.targetPos.y);
+                current.startPos.set(current.x, -this.height/2 + (newRow) * Orb.HEIGHT);
                 this.orbArray[newRow][col] = current;
                 this.skyfallArray[r][col] = null;
-                this.scene.physics.moveToObject(current, current.targetPos, 60, 500);
 
             }
             dropDist = 0;
