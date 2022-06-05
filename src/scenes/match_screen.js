@@ -31,6 +31,8 @@ class match_screen extends Phaser.Scene{
         this.board = new Board(this,100,100);
 
         this.colors = ["#FF0000","#0096FF","#50C878","#702963","#FFBF00"];
+        this.particles = this.add.particles("particle");
+
 
          //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
         //img.setDisplaySize(640,480);
@@ -66,10 +68,12 @@ class match_screen extends Phaser.Scene{
         this.board.setInteractive();
     }
 
-    onComboMatched(color,numOrbs){
+    onComboMatched(color,numOrbs,startPos){
         this.totalCombosText.setText("Combos: " + ++this.comboCount);
         const damage = numOrbs *2;
-        this.displayDamageText(color,damage);
+        this.playDamageAnimation(color,damage,startPos);
+        //this.displayDamageText(color,damage);
+
         this.damageEnemy(damage);
         this.enemy.play("pink_hit",true);
     }
@@ -88,10 +92,21 @@ class match_screen extends Phaser.Scene{
         }
     }
 
-    displayDamageText(color,damage){
 
-        const posX = Phaser.Math.Between(250,350);
-        const posY = Phaser.Math.Between(100,130);
+    playDamageAnimation(color,damage,startPos){
+
+        const targetX = Phaser.Math.Between(250,350);
+        const targetY = Phaser.Math.Between(100,130);
+        this.displayDamageText(color,damage,targetX,targetY);
+        this.emitParticles(startPos,targetX,targetY);
+
+
+    }
+
+
+
+    displayDamageText(color,damage,posX,posY){
+  
         let damageText= this.add.text(posX,posY,damage,{color: this.colors[color], fontSize: 50});
         this.tweens.add({
             targets: damageText,
@@ -102,6 +117,45 @@ class match_screen extends Phaser.Scene{
             ease: "Quad.easeIn",
             onComplete: function(){
                 damageText.destroy();
+            }
+        });
+    }
+
+
+    emitParticles(startPos,targetX,targetY){
+
+        const particleEmitter = this.particles.createEmitter({
+            x: startPos.x,
+            y: startPos.y,
+            quantity: 5,
+            speed: {random: [50,100]},
+            lifespan: {random: [200,400]},
+            scale: { random: true, start: 1, end: 0 },
+            blendMode: "ADD"
+        });
+
+        const xVals = [startPos.x,targetX/2,targetX];
+		const yVals = [startPos.y,targetY/2,targetY];
+
+        this.tweens.addCounter({
+            from:0,
+            to:1,
+            ease: Phaser.Math.Easing.Sine.InOut,
+            duration: 1000,
+            onUpdate: tween => {
+
+                const v = tween.getValue();
+                const x = Phaser.Math.Interpolation.CatmullRom(xVals,v);
+                const y = Phaser.Math.Interpolation.CatmullRom(yVals,v);
+                particleEmitter.setPosition(x,y);
+            },
+            onComplete: () =>{
+                particleEmitter.explode(50,targetX,targetY);
+                particleEmitter.stop();
+                this.time.delayedCall(1000, () => {
+                    this.particles.removeEmitter(particleEmitter);
+				});
+               
             }
         });
     }
@@ -119,6 +173,7 @@ class match_screen extends Phaser.Scene{
         this.load.image("wood","./assets/orbs/Wood.png");
         this.load.image("dark","./assets/orbs/Dark.png");
         this.load.image("light","./assets/orbs/Light.png"); 
+        this.load.image("particle","./assets/particle.png"); 
 
     }
 }

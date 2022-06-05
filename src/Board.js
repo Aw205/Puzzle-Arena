@@ -181,6 +181,12 @@ class Board extends Phaser.GameObjects.Container {
 
     onEvent() {
 
+        const containerX = this.x;
+        const containerY = this.y;
+
+        console.log("containerX: "  + this.x);
+        console.log("containerY: " + this.y);
+
         if (this.comboList.length == 0) {
             return this.skyfall();
         }
@@ -193,7 +199,9 @@ class Board extends Phaser.GameObjects.Container {
             duration: 450,
             onCompleteScope: this,
             onComplete: function () {
-                emitter.emit("comboMatched",set[0].type,set.length);
+
+                const vec = new Phaser.Math.Vector2(set[1].startPos.x + containerX,set[1].startPos.y + containerY)
+                emitter.emit("comboMatched",set[0].type,set.length,vec);
                 for (let orb of set) {
                     this.orbArray[orb.row][orb.col] = null;
                     orb.destroy();
