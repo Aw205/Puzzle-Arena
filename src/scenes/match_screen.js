@@ -91,7 +91,7 @@ class match_screen extends Phaser.Scene{
     displayDamageText(color,damage){
 
         const posX = Phaser.Math.Between(250,350);
-        const posY = Phaser.Math.Between(100,150);
+        const posY = Phaser.Math.Between(100,130);
         let damageText= this.add.text(posX,posY,damage,{color: this.colors[color], fontSize: 50});
         this.tweens.add({
             targets: damageText,
