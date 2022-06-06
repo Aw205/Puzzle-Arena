@@ -19,6 +19,8 @@ class match_screen extends Phaser.Scene{
 
     create(data){
 
+        this.add.image(640/2,480/2,"battle_background").setDisplaySize(640,480);
+
         this.cameras.main.fadeIn(1000);
         this.cameras.main.setBackgroundColor("#5F9EA0");
         this.comboCount = 0;
@@ -49,9 +51,7 @@ class match_screen extends Phaser.Scene{
                                 this.add.particles("dark_particle"),
                                 this.add.particles("light_particle"));
             
-        //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
-        //img.setDisplaySize(640,480);
-        //this.add.existing(img);
+        
        
     }
 
@@ -184,7 +184,8 @@ class match_screen extends Phaser.Scene{
         this.load.image("wood_particle","./assets/particles/wood_particle.png"); 
         this.load.image("water_particle","./assets/particles/water_particle.png"); 
         this.load.image("dark_particle","./assets/particles/dark_particle.png"); 
-        this.load.image("light_particle","./assets/particles/light_particle.png"); 
+        this.load.image("light_particle","./assets/particles/light_particle.png");
+        this.load.image("battle_background","./assets/battleback10.png"); 
 
     }
 }

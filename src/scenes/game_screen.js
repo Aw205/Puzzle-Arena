@@ -127,7 +127,8 @@ class game_screen extends Phaser.Scene {
                 start: 0,
                 end:13
             }),
-            frameRate:12
+            frameRate:12,
+            repeat: 0
         });
 
     }

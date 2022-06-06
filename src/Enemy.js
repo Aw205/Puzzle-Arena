@@ -17,8 +17,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
 
     attackPlayer(){
 
-        this.play("pink_swallow");
-        this.chain("pink_idle");
+        this.play("pink_swallow").chain("pink_idle");
         this.scene.sound.play("player_hit");
         emitter.emit("damage_player",10);
         emitter.emit("playerTurn");
