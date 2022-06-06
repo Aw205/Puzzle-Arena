@@ -24,7 +24,6 @@ class HealthBar extends Phaser.GameObjects.Graphics{
         if (this.value <= 0) {
             this.value = 0;
             emitter.emit("enemyDeath");
-            this.scene.scene.transition({target: "game_screen"});
         }
         this.health_text.setText(this.value.toString() + "/100");
         this.draw();

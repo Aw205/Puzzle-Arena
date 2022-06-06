@@ -9,6 +9,7 @@ class match_screen extends Phaser.Scene{
         emitter.on("playerTurn",this.onPlayerTurn,this);
         emitter.on("comboMatched",this.onComboMatched,this);
         emitter.on("enemyDeath",this.onEnemyDeath,this); 
+        emitter.on("damage_player",this.onPlayerDamage,this); 
 
     }
 
@@ -54,7 +55,16 @@ class match_screen extends Phaser.Scene{
        
     }
 
+    onPlayerDamage(damage){
+        this.player_healthBar.decrease(damage);
+    }
+
     onEnemyDeath(){
+
+        emitter.off("enemy_turn");
+        emitter.off("damage_enemy");
+        this.sound.play("slime_death");
+        this.data.enemy.destroy();
 
         this.tweens.add({
             targets:  this.sound.get("combat_music"),
@@ -63,14 +73,10 @@ class match_screen extends Phaser.Scene{
             onComplete: ()=>{
                 this.sound.stopByKey("combat_music");
                 this.sound.play("main_music");
-
+                this.scene.transition({target: "game_screen"});
             }
         });
 
-        emitter.off("enemy_turn");
-        emitter.off("damage_enemy");
-        this.sound.play("slime_death");
-        this.data.enemy.destroy();
     }
 
     createHUD(){
@@ -95,7 +101,6 @@ class match_screen extends Phaser.Scene{
         this.totalCombosText.setText("Combos: " + ++this.comboCount);
         const damage = numOrbs *2;
         this.playDamageAnimation(color,damage,startPos);
-        emitter.emit("damage_enemy",damage);
     }
 
     playDamageAnimation(color,damage,startPos){
@@ -153,6 +158,7 @@ class match_screen extends Phaser.Scene{
                 particleEmitter.explode(50,targetX,targetY);
                 particleEmitter.stop();
                 this.displayDamageText(color,damage,targetX,targetY);
+                emitter.emit("damage_enemy",damage);
                 this.time.delayedCall(1000, () => {
                     this.particleArray[color].removeEmitter(particleEmitter);
 				});
