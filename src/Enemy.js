@@ -10,12 +10,25 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
 
         if(showHealth){
             this.healthBar = new HealthBar(scene,{x: game.config.width/2-50,y: 10},80);
-            emitter.on("enemy_turn",this.attackPlayer,this);
+            emitter.on("enemy_turn",this.onEnemyTurn,this);
             emitter.on("damage_enemy",this.onDamaged,this);
         }
     }
 
-    attackPlayer(){
+    onEnemyTurn(){
+
+        if(this.healthBar.value==0){
+            this.scene.add.tween({
+                targets: this,
+                alpha: 0,
+                duration: 1000,
+                onComplete: () => {
+                    slimes_killed++;
+                    emitter.emit("enemy_death");
+                }
+            });
+            return;        
+        }
 
         this.play("pink_swallow").chain("pink_idle");
         this.scene.sound.play("player_hit");
@@ -26,7 +39,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
 
     onDamaged(damage){
         this.scene.sound.play("slime_hit");
-        this.play("pink_hit",true).chain("pink_idle");
+        this.play("pink_hit",true);
         this.healthBar.decrease(damage);
 
     }

@@ -1,5 +1,6 @@
 
 var player;
+var slimes_killed = 0;
 
 class game_screen extends Phaser.Scene {
 

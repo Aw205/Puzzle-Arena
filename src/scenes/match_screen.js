@@ -8,7 +8,7 @@ class match_screen extends Phaser.Scene{
         emitter.on("solveComplete",this.onSolveComplete,this);
         emitter.on("playerTurn",this.onPlayerTurn,this);
         emitter.on("comboMatched",this.onComboMatched,this);
-        emitter.on("enemyDeath",this.onEnemyDeath,this); 
+        emitter.on("enemy_death",this.onEnemyDeath,this); 
         emitter.on("damage_player",this.onPlayerDamage,this); 
 
     }
@@ -28,17 +28,16 @@ class match_screen extends Phaser.Scene{
 
         this.tweens.add({
             targets:  this.sound.get("main_music"),
-            volume:   0,
+            volume: 0,
             duration: 500,
             onComplete: ()=>{
                 this.sound.stopByKey("main_music");
                 this.sound.play("combat_music");
-
             }
         });
 
         this.enemy = new Enemy(this,330,130,data.enemy.texture,true).setScale(10,10);
-        this.player_healthBar = new HealthBar(this,{x:200, y: 230},6*Orb.WIDTH);
+        this.player_healthBar = new HealthBar(this,{ x:200, y: 230 },6*Orb.WIDTH);
         this.createHUD();
         this.board = new Board(this,100,100);
 
@@ -49,10 +48,7 @@ class match_screen extends Phaser.Scene{
                                 this.add.particles("water_particle"),
                                 this.add.particles("wood_particle"),
                                 this.add.particles("dark_particle"),
-                                this.add.particles("light_particle"));
-            
-        
-       
+                                this.add.particles("light_particle"));  
     }
 
     onPlayerDamage(damage){
@@ -73,7 +69,13 @@ class match_screen extends Phaser.Scene{
             onComplete: ()=>{
                 this.sound.stopByKey("combat_music");
                 this.sound.play("main_music");
-                this.scene.transition({target: "game_screen"});
+                if(slimes_killed!=3){
+                    this.scene.transition({target: "game_screen"});
+                }
+                else{
+                    this.scene.start("victory_screen");
+                }
+               
             }
         });
 
@@ -118,7 +120,7 @@ class match_screen extends Phaser.Scene{
             y: damageText.y - Phaser.Math.Between(200,100),
             alpha: 0,
             duration: 1000,
-            ease: "Quad.easeIn",
+            ease: "Expo.easeIn",
             onComplete: function(){
                 damageText.destroy();
             }

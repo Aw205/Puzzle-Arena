@@ -5,7 +5,7 @@ class HealthBar extends Phaser.GameObjects.Graphics{
 
         super(scene,options);
 
-        this.colors = {green: 0x00ff00, red: 0xff0000, black: 0x000000, white: 0xffffff};
+        this.colors = {green: 0x00ff00, red: 0xff0000, yellow: 0xFFBF00, black: 0x000000, white: 0xffffff};
         this.width = width;
         this.value = 100;
         
@@ -23,7 +23,6 @@ class HealthBar extends Phaser.GameObjects.Graphics{
         this.value -=amount;
         if (this.value <= 0) {
             this.value = 0;
-            emitter.emit("enemyDeath");
         }
         this.health_text.setText(this.value.toString() + "/100");
         this.draw();
@@ -39,7 +38,11 @@ class HealthBar extends Phaser.GameObjects.Graphics{
         this.fillStyle(this.colors["white"]); //background
         this.fillRect(2, 2, this.width-4, 12);
 
+       
         let healthColor = (this.value < 30) ? this.colors["red"] : this.colors["green"];
+        if(this.value <= 60 && this.value >30 ){
+            healthColor = this.colors["yellow"];
+        }
         this.fillStyle(healthColor);
 
         let d = Math.floor((this.width-4) * (this.value/100));
