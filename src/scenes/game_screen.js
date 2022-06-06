@@ -25,6 +25,7 @@ class game_screen extends Phaser.Scene {
         this.createAnims();
 
         player = new Player(this,100,150,"run_up");
+        slimes_killed = 0;
         this.createMap();
         player.setDepth(10);
 

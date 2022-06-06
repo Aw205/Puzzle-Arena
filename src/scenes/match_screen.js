@@ -187,7 +187,7 @@ class match_screen extends Phaser.Scene{
         this.load.image("water_particle","./assets/particles/water_particle.png"); 
         this.load.image("dark_particle","./assets/particles/dark_particle.png"); 
         this.load.image("light_particle","./assets/particles/light_particle.png");
-        this.load.image("battle_background","./assets/battleback10.png"); 
+        //this.load.image("battle_background","./assets/battleback10.png"); 
 
     }
 }
