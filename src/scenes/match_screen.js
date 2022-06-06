@@ -48,8 +48,6 @@ class match_screen extends Phaser.Scene{
                                 this.add.particles("dark_particle"),
                                 this.add.particles("light_particle"));
             
-
-
         //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
         //img.setDisplaySize(640,480);
         //this.add.existing(img);
@@ -156,7 +154,7 @@ class match_screen extends Phaser.Scene{
                 particleEmitter.stop();
                 this.displayDamageText(color,damage,targetX,targetY);
                 this.time.delayedCall(1000, () => {
-                    this.particles.removeEmitter(particleEmitter);
+                    this.particleArray[color].removeEmitter(particleEmitter);
 				});
                
             }
