@@ -42,11 +42,12 @@ class match_screen extends Phaser.Scene{
         this.colors = ["#FF0000","#0096FF","#50C878","#702963","#FFBF00"];
 
         this.particleArray = [];
-        this.particleArray.push(this.add.particles("fire_particle"))
-                          .push(this.add.particles("water_particle"))
-                          .push(this.add.particles("wood_particle"))
-                          .push(this.add.particles("dark_particle"))
-                          .push(this.add.particles("light_particle"));
+        this.particleArray.push(this.add.particles("fire_particle"),
+                                this.add.particles("water_particle"),
+                                this.add.particles("wood_particle"),
+                                this.add.particles("dark_particle"),
+                                this.add.particles("light_particle"));
+            
 
 
         //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
