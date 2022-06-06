@@ -11,16 +11,16 @@ class Menu extends Phaser.Scene{
     preload(){
 
         this.load.audio("button_click","./assets/audio/button_click.wav");
-        this.load.audio("music","./assets/audio/puzzle_arena.mp3"); 
-        this.load.audio("happy","./assets/audio/happy_vibe.ogg"); 
+        this.load.audio("combat_music","./assets/audio/puzzle_arena.mp3"); 
+        this.load.audio("main_music","./assets/audio/happy_vibe.ogg"); 
         //this.load.image("menu_background","./assets/menu_background.png");
     }
 
     create(){
 
          if(!music_isPlaying){
-            this.sound.play("happy",{loop: true, volume: 0.6});
-            this.sound.add("music",{loop:true});
+            this.sound.play("main_music",{loop: true, volume: 0.6});
+            this.sound.add("combat_music",{loop:true});
             music_isPlaying=true;
         }
 

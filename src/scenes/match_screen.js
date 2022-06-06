@@ -24,28 +24,32 @@ class match_screen extends Phaser.Scene{
         this.data = data;
 
         this.tweens.add({
-            targets:  this.sound.get("happy"),
+            targets:  this.sound.get("main_music"),
             volume:   0,
             duration: 500,
             onComplete: ()=>{
-                this.sound.stopByKey("happy");
-                this.sound.play("music");
+                this.sound.stopByKey("main_music");
+                this.sound.play("combat_music");
 
             }
         });
 
-        this.enemy = new Enemy(this,330,130,data.enemy.texture).setScale(10,10);
-
+        this.enemy = new Enemy(this,330,130,data.enemy.texture,true).setScale(10,10);
         this.player_healthBar = new HealthBar(this,{x:200, y: 230},6*Orb.WIDTH);
-        this.health_bar = new HealthBar(this,{x: this.game.config.width/2-50,y: 10},80);
         this.createHUD();
         this.board = new Board(this,100,100);
 
         this.colors = ["#FF0000","#0096FF","#50C878","#702963","#FFBF00"];
-        this.particles = this.add.particles("particle");
+
+        this.particleArray = [];
+        this.particleArray.push(this.add.particles("fire_particle"))
+                          .push(this.add.particles("water_particle"))
+                          .push(this.add.particles("wood_particle"))
+                          .push(this.add.particles("dark_particle"))
+                          .push(this.add.particles("light_particle"));
 
 
-         //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
+        //let img = new Phaser.GameObjects.Image(this,640/2,480/2,"combat_background");
         //img.setDisplaySize(640,480);
         //this.add.existing(img);
        
@@ -54,12 +58,12 @@ class match_screen extends Phaser.Scene{
     onEnemyDeath(){
 
         this.tweens.add({
-            targets:  this.sound.get("music"),
+            targets:  this.sound.get("combat_music"),
             volume:   0,
             duration: 1000,
             onComplete: ()=>{
-                this.sound.stopByKey("music");
-                this.sound.play("happy");
+                this.sound.stopByKey("combat_music");
+                this.sound.play("main_music");
 
             }
         });
@@ -79,10 +83,7 @@ class match_screen extends Phaser.Scene{
     
     onSolveComplete(){
        this.comboCount = 0;
-       this.time.delayedCall(2000,()=>{
-           emitter.emit("enemy_turn");
-       },
-       this);
+       this.time.delayedCall(2000,() => { emitter.emit("enemy_turn");},this);
     }
 
     onPlayerTurn(){
@@ -91,29 +92,17 @@ class match_screen extends Phaser.Scene{
     }
 
     onComboMatched(color,numOrbs,startPos){
+
         this.totalCombosText.setText("Combos: " + ++this.comboCount);
         const damage = numOrbs *2;
         this.playDamageAnimation(color,damage,startPos);
-
-        this.damageEnemy(damage);
-        this.enemy.play("pink_hit",true);
-    }
-
-    damageEnemy(damage){
-
-        this.health_bar.decrease(damage);
-        this.sound.play("slime_hit");
-        this.enemy.chain("pink_idle");
+        emitter.emit("damage_enemy",damage);
     }
 
     playDamageAnimation(color,damage,startPos){
-
         const targetX = Phaser.Math.Between(250,350);
         const targetY = Phaser.Math.Between(100,130);
-        this.displayDamageText(color,damage,targetX,targetY);
-        this.emitParticles(startPos,targetX,targetY);
-
-
+        this.emitParticles(startPos,targetX,targetY,color,damage);
     }
 
     displayDamageText(color,damage,posX,posY){
@@ -121,7 +110,7 @@ class match_screen extends Phaser.Scene{
         let damageText= this.add.text(posX,posY,damage,{color: this.colors[color], fontSize: 50});
         this.tweens.add({
             targets: damageText,
-            x: damageText.x+ Phaser.Math.Between(-100,100),
+            x: damageText.x + Phaser.Math.Between(-100,100),
             y: damageText.y - Phaser.Math.Between(200,100),
             alpha: 0,
             duration: 1000,
@@ -133,16 +122,16 @@ class match_screen extends Phaser.Scene{
     }
 
 
-    emitParticles(startPos,targetX,targetY){
+    emitParticles(startPos,targetX,targetY,color,damage){
 
-        const particleEmitter = this.particles.createEmitter({
+        const particleEmitter = this.particleArray[color].createEmitter({
             x: startPos.x,
             y: startPos.y,
             quantity: 5,
             speed: {random: [50,100]},
             lifespan: {random: [200,400]},
             scale: { random: true, start: 1, end: 0 },
-            blendMode: "ADD"
+            blendMode: "NORMAL"
         });
         const midX = Phaser.Math.Between(targetX/2,targetX + targetX/2);
         const midY = Phaser.Math.Between(startPos.y,targetY);
@@ -164,6 +153,7 @@ class match_screen extends Phaser.Scene{
             onComplete: () =>{
                 particleEmitter.explode(50,targetX,targetY);
                 particleEmitter.stop();
+                this.displayDamageText(color,damage,targetX,targetY);
                 this.time.delayedCall(1000, () => {
                     this.particles.removeEmitter(particleEmitter);
 				});
@@ -185,7 +175,11 @@ class match_screen extends Phaser.Scene{
         this.load.image("wood","./assets/orbs/Wood.png");
         this.load.image("dark","./assets/orbs/Dark.png");
         this.load.image("light","./assets/orbs/Light.png"); 
-        this.load.image("particle","./assets/particle.png"); 
+        this.load.image("fire_particle","./assets/particles/fire_particle.png"); 
+        this.load.image("wood_particle","./assets/particles/wood_particle.png"); 
+        this.load.image("water_particle","./assets/particles/water_particle.png"); 
+        this.load.image("dark_particle","./assets/particles/dark_particle.png"); 
+        this.load.image("light_particle","./assets/particles/light_particle.png"); 
 
     }
 }
