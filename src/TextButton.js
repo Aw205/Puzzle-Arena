@@ -14,7 +14,6 @@ class TextButton extends Phaser.GameObjects.Text{
             .on("pointerout",()=> this.enterButtonRestState());
         this.scene.add.existing(this);
 
-        
     }
 
       onClick(){

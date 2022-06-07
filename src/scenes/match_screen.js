@@ -68,7 +68,7 @@ class match_screen extends Phaser.Scene{
             duration: 1000,
             onComplete: ()=>{
                 this.sound.stopByKey("combat_music");
-                this.sound.play("main_music");
+                this.sound.play("main_music",{volume: 0.3});
                 if(slimes_killed!=3){
                     this.scene.transition({target: "game_screen"});
                 }
