@@ -86,6 +86,8 @@ class Menu extends Phaser.Scene{
         enem.play("pink_idle");
         enem.on("pointerdown", function(pointer){
             enem.play("pink_death");
+            enem.x+= 5*scaleFactor; // need to apply offset since the anim for death is slightly off
+            enem.y-= 5*scaleFactor;
             enem.on("animationcomplete",enem.destroy);
             this.spawnSlime();
         },this);
@@ -133,7 +135,7 @@ class Menu extends Phaser.Scene{
                 prefix: "pink_",
                 end: 12
             }),
-            frameRate: 12,
+            frameRate: 14,
             repeat: 0
         });
 

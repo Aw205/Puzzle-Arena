@@ -18,14 +18,14 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
     onEnemyTurn(){
 
         if(this.healthBar.value==0){
-            this.scene.add.tween({
-                targets: this,
-                alpha: 0,
-                duration: 1000,
-                onComplete: () => {
-                    slimes_killed++;
-                    emitter.emit("enemy_death");
-                }
+            this.play("pink_death");
+            this.x+= 50;
+            this.y-= 50;
+            this.on("animationcomplete",()=>{
+                this.destroy();
+                slimes_killed++;
+                emitter.emit("enemy_death");
+                
             });
             return;        
         }
