@@ -1,27 +1,28 @@
 
 var player;
 var slimes_killed = 0;
+var total_combos = [];
+var total_damage = 0;
+var max_damage = 0;
 
 class game_screen extends Phaser.Scene {
-
 
     constructor() {
         super("game_screen");
     }
 
     preload() {
-
-       
         this.load.image("serene_village", "./assets/map/Serene_Village.png");
         this.load.tilemapTiledJSON("tilemap", "./assets/map/Serene_Village_Map.json");
-
     }
 
     create() {
-        //this.createAnims();
 
         player = new Player(this,100,150,"run_up");
         slimes_killed = 0;
+        total_combos = [];
+        total_damage = 0;
+        max_damage = 0;
         this.createMap();
         player.setDepth(10);
 
@@ -30,7 +31,6 @@ class game_screen extends Phaser.Scene {
 
         // player.body.setCollideWorldBounds(true);
         // player.body.onWorldBounds = true;   
- 
 
     }
 
@@ -52,10 +52,6 @@ class game_screen extends Phaser.Scene {
         }
         let entrances = map.createFromObjects("House Entrance",{name: "Entrance", classType: Entrance});
         this.cameras.main.setBounds(0, 0, map.widthInPixels,map.heightInPixels);
-    }
-
-    createAnims(){
-
     }
 
 }

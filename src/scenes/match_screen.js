@@ -89,6 +89,8 @@ class match_screen extends Phaser.Scene{
     }
     
     onSolveComplete(){
+
+       total_combos.push(this.comboCount);
        this.comboCount = 0;
        this.time.delayedCall(2000,() => { emitter.emit("enemy_turn");},this);
     }
@@ -102,6 +104,8 @@ class match_screen extends Phaser.Scene{
 
         this.totalCombosText.setText("Combos: " + ++this.comboCount);
         const damage = numOrbs *2;
+        max_damage = Math.max(max_damage,damage);
+        total_damage += damage;
         this.playDamageAnimation(color,damage,startPos);
     }
 
