@@ -18,6 +18,8 @@ class game_screen extends Phaser.Scene {
 
     create() {
 
+        this.cameras.main.fadeIn(500);
+
         player = new Player(this,100,150,"run_up");
         slimes_killed = 0;
         total_combos = [];

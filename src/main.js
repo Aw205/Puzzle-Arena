@@ -13,7 +13,7 @@ let config = {
             //debug: true
         },
     },
-    scene: [Menu,match_screen,shop_room,game_screen,victory_screen],
+    scene: [Menu,match_screen,shop_room,game_screen,credits_screen,victory_screen],
     pixelArt: true,
     //zoom : 1
 }

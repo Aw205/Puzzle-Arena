@@ -16,6 +16,7 @@ class Menu extends Phaser.Scene{
         this.load.audio("victory","./assets/audio/sfx_victory.wav"); 
         this.load.image("battle_background","./assets/battleback10.png"); 
         this.load.image("button_background","./assets/button_background.png"); 
+        this.load.svg("credits_background","./assets/credits_background.svg",{width:640, height: 480}); 
         this.load.svg("puzzle_arena_background","./assets/puzzle_arena_menu.svg",{width: 640, height: 480});
         this.load.svg("puzzle_arena_victory","./assets/puzzle_arena_victory.svg",{width: 640, height: 480});
 
@@ -37,14 +38,17 @@ class Menu extends Phaser.Scene{
         this.createAnimations();
         this.add.image(game.config.width/2,game.config.height/2,"puzzle_arena_background");
         
-        this.startButton = new TextButton(this,game.config.width/2,500,"Start",{fontSize: 30},()=> this.scene.start("game_screen")).setOrigin(0.5);
+        this.startButton = new TextButton(this,game.config.width/2,500,"Start",{fontSize: 30},()=> {
+            this.cameras.main.fadeOut(1500);
+            this.cameras.main.once("camerafadeoutcomplete",() => {
+                this.scene.start("game_screen");
+            });   
+        }).setOrigin(0.5);
         this.tutorialButton = new TextButton(this,game.config.width/2,550,"Tutorial",{fontSize: 20},()=> this.scene.start("game_screen")).setOrigin(0.5);
-        this.creditsButton = new TextButton(this,game.config.width/2,600,"Credits",{fontSize: 22},()=> this.scene.start("game_screen")).setOrigin(0.5);
+        this.creditsButton = new TextButton(this,game.config.width/2,600,"Credits",{fontSize: 22},()=> this.scene.start("credits_screen")).setOrigin(0.5);
 
         this.tweenButtons();
         this.spawnSlimes();
-  
-       
     }
 
     tweenButtons(){
@@ -101,11 +105,6 @@ class Menu extends Phaser.Scene{
             ease: "Expo.easeIn",
             duration: 2000
          });
-
-    }
-
-    displayCredits(){
-
 
     }
 
