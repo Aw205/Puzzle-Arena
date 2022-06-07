@@ -9,6 +9,7 @@ class victory_screen extends Phaser.Scene{
     create(){
         this.cameras.main.fadeIn(1000);
         this.scene.stop("game_screen");
+        this.sound.play("victory");
 
         this.add.image(game.config.width/2,game.config.height/2,"puzzle_arena_victory");
         const restartButton = new TextButton(this,game.config.width/2-10,350,"Restart",{fontSize: 22},()=> this.scene.start("game_screen")).setOrigin(0.5);

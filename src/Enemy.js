@@ -1,12 +1,13 @@
 class Enemy extends Phaser.Physics.Arcade.Sprite{
 
-    constructor(scene,x,y,texture,showHealth=false){
+    constructor(scene,x,y,texture,showHealth=false,slimeColor=-1){
         super(scene,x,y,texture); 
 
+        this.color = (slimeColor == -1) ? Phaser.Math.Between(0,6) : slimeColor;
         this.scene.add.existing(this)
             .scene.physics.add.existing(this)
             .setImmovable(true)
-            .play("pink_idle");
+            .play(slimeColors[this.color] + "_idle");
 
         if(showHealth){
             this.healthBar = new HealthBar(scene,{x: game.config.width/2-50,y: 10},80);
@@ -17,8 +18,8 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
 
     onEnemyTurn(){
 
-        if(this.healthBar.value==0){
-            this.play("pink_death");
+        if(this.healthBar.value == 0){
+            this.play(slimeColors[this.color] + "_death");
             this.x+= 50;
             this.y-= 50;
             this.on("animationcomplete",()=>{
@@ -30,7 +31,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
             return;        
         }
 
-        this.play("pink_swallow").chain("pink_idle");
+        this.play(slimeColors[this.color] + "_swallow").chain(slimeColors[this.color] + "_idle");
         this.scene.sound.play("player_hit");
         emitter.emit("damage_player",10);
         emitter.emit("playerTurn");
@@ -39,7 +40,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
 
     onDamaged(damage){
         this.scene.sound.play("slime_hit");
-        this.play("pink_hit",true);
+        this.play(slimeColors[this.color] + "_hit",true);
         this.healthBar.decrease(damage);
 
     }

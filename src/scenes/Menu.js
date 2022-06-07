@@ -1,5 +1,6 @@
 var emitter = new Phaser.Events.EventEmitter();
 var music_isPlaying = false;
+var slimeColors = ["pink","orange","yellow","blue","green","tan","silver"];
 
 class Menu extends Phaser.Scene{
 
@@ -12,6 +13,7 @@ class Menu extends Phaser.Scene{
         this.load.audio("button_click","./assets/audio/button_click.wav");
         this.load.audio("combat_music","./assets/audio/puzzle_arena.mp3"); 
         this.load.audio("main_music","./assets/audio/happy_vibe.ogg"); 
+        this.load.audio("victory","./assets/audio/sfx_victory.wav"); 
         this.load.image("battle_background","./assets/battleback10.png"); 
         this.load.image("button_background","./assets/button_background.png"); 
         this.load.svg("puzzle_arena_background","./assets/puzzle_arena_menu.svg",{width: 640, height: 480});
@@ -31,7 +33,6 @@ class Menu extends Phaser.Scene{
             this.sound.add("combat_music",{loop:true});
             music_isPlaying=true;
         }
-        this.slimeColors = ["pink","orange","yellow","blue","green","tan","silver"];
 
         this.createAnimations();
         this.add.image(game.config.width/2,game.config.height/2,"puzzle_arena_background");
@@ -84,7 +85,7 @@ class Menu extends Phaser.Scene{
         let xArr = [Phaser.Math.Between(10,230),Phaser.Math.Between(400,600)];
         let randY = Phaser.Math.Between(200,450);
         let scaleFactor = Phaser.Math.FloatBetween(1,3);
-        let randColor = Phaser.Math.RND.pick(this.slimeColors);
+        let randColor = Phaser.Math.RND.pick(slimeColors);
         let enem = this.add.sprite(Phaser.Math.RND.pick(xArr),-50,null).setScale(scaleFactor,scaleFactor).setInteractive({useHandCursor: true});
         enem.play(randColor.concat("_idle"));
         enem.on("pointerdown", function(pointer){
@@ -111,7 +112,7 @@ class Menu extends Phaser.Scene{
 
     createAnimations(){
 
-        for (let color of this.slimeColors){
+        for (let color of slimeColors){
             this.anims.create({
                 key: color.concat("_idle"),
                 frames: this.anims.generateFrameNames("slime_idle",{
@@ -122,7 +123,6 @@ class Menu extends Phaser.Scene{
                 frameRate: 3,
                 repeat: -1
             });
-
             this.anims.create({
                 key: color.concat("_hit"),
                 frames: this.anims.generateFrameNames("slime_hit",{
@@ -153,6 +153,7 @@ class Menu extends Phaser.Scene{
                 frameRate:12,
                 repeat: 0
             });
+            
         }
 
         this.anims.create({

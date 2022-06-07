@@ -44,7 +44,7 @@ class game_screen extends Phaser.Scene {
             layer.setCollisionByProperty({collides: true});
             this.physics.add.collider(player,layer);
         }
-        this.enemyArray = map.createFromObjects("Enemy",{name: "Slime", key: "pink_idle", classType: Enemy});
+        this.enemyArray = map.createFromObjects("Enemy",{name: "Slime", classType: Enemy});
         for(let slime of this.enemyArray){
             this.physics.add.collider(slime,player,()=>{
                 this.scene.transition({target: "match_screen", duration: 0, sleep: true, data: {enemy: slime}});

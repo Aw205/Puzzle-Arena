@@ -36,7 +36,7 @@ class match_screen extends Phaser.Scene{
             }
         });
 
-        this.enemy = new Enemy(this,330,130,data.enemy.texture,true).setScale(10,10);
+        this.enemy = new Enemy(this,330,130,null,true,data.enemy.color).setScale(10,10);
         this.player_healthBar = new HealthBar(this,{ x:200, y: 230 },6*Orb.WIDTH);
         this.createHUD();
         this.board = new Board(this,100,100);
@@ -53,6 +53,12 @@ class match_screen extends Phaser.Scene{
 
     onPlayerDamage(damage){
         this.player_healthBar.decrease(damage);
+        if(this.player_healthBar.value <=0){
+            emitter.off("enemy_turn");
+            emitter.off("damage_enemy");
+            this.scene.stop("game_screen");
+            this.scene.start("game_screen");
+        }
     }
 
     onEnemyDeath(){
@@ -117,7 +123,7 @@ class match_screen extends Phaser.Scene{
 
     displayDamageText(color,damage,posX,posY){
   
-        let damageText= this.add.text(posX,posY,damage,{color: this.colors[color], fontSize: 50});
+        let damageText= this.add.text(posX,posY,damage,{color: this.colors[color], fontSize: 50, fontFamily: "Impact"});
         this.tweens.add({
             targets: damageText,
             x: damageText.x + Phaser.Math.Between(-100,100),
@@ -191,7 +197,6 @@ class match_screen extends Phaser.Scene{
         this.load.image("water_particle","./assets/particles/water_particle.png"); 
         this.load.image("dark_particle","./assets/particles/dark_particle.png"); 
         this.load.image("light_particle","./assets/particles/light_particle.png");
-        //this.load.image("battle_background","./assets/battleback10.png"); 
 
     }
 }
