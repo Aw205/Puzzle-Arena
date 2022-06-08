@@ -52,7 +52,7 @@ class game_screen extends Phaser.Scene {
                 this.scene.transition({target: "match_screen", duration: 0, sleep: true, data: {enemy: slime}});
             });
         }
-        let entrances = map.createFromObjects("House Entrance",{name: "Entrance", classType: Entrance});
+        //let entrances = map.createFromObjects("House Entrance",{name: "Entrance", classType: Entrance});
         this.cameras.main.setBounds(0, 0, map.widthInPixels,map.heightInPixels);
     }
 

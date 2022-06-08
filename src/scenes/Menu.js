@@ -17,6 +17,7 @@ class Menu extends Phaser.Scene{
         this.load.image("battle_background","./assets/battleback10.png"); 
         this.load.image("button_background","./assets/button_background.png"); 
         this.load.svg("credits_background","./assets/credits_background.svg",{width:640, height: 480}); 
+        this.load.svg("tutorial_background","./assets/puzzle_arena_tutorial.svg",{width: 640, height: 480});
         this.load.svg("puzzle_arena_background","./assets/puzzle_arena_menu.svg",{width: 640, height: 480});
         this.load.svg("puzzle_arena_victory","./assets/puzzle_arena_victory.svg",{width: 640, height: 480});
 
@@ -44,7 +45,7 @@ class Menu extends Phaser.Scene{
                 this.scene.start("game_screen");
             });   
         }).setOrigin(0.5);
-        this.tutorialButton = new TextButton(this,game.config.width/2,550,"Tutorial",{fontSize: 20},()=> this.scene.start("game_screen")).setOrigin(0.5);
+        this.tutorialButton = new TextButton(this,game.config.width/2,550,"Tutorial",{fontSize: 20},()=> this.scene.start("tutorial_screen")).setOrigin(0.5);
         this.creditsButton = new TextButton(this,game.config.width/2,600,"Credits",{fontSize: 22},()=> this.scene.start("credits_screen")).setOrigin(0.5);
 
         this.tweenButtons();
