@@ -15,15 +15,13 @@ class victory_screen extends Phaser.Scene{
         const restartButton = new TextButton(this,game.config.width/2-10,350,"Restart",{fontSize: 22},()=> this.scene.start("game_screen")).setOrigin(0.5);
         const menuButton = new TextButton(this,game.config.width/2-10,420,"Menu",{fontSize: 30},()=> this.scene.start("Menu")).setOrigin(0.5);
 
-        this.comboText = this.add.text(-132,180,"Average Combo: ").setColor("#000000").setData("value",total_combos.reduce((a,b) => (a+b)) / total_combos.length);
-        this.totalDamageText = this.add.text(-122,230,"Total Damage: ").setColor("#000000").setData("value",total_damage);
-        this.maxDamageText = this.add.text(-110,280,"Max Damage: ").setColor("#000000").setData("value",max_damage);
+        this.comboText = this.add.text(-225,180,"Average Combo: ",{fontSize:27,fontFamily: "Monaco", color: "#000000"}).setData("value",total_combos.reduce((a,b) => (a+b)) / total_combos.length);
+        this.totalDamageText = this.add.text(-210,230,"Total Damage: ",{fontSize: 27, fontFamily: "Monaco", color: "#000000"}).setData("value",total_damage);
+        this.maxDamageText = this.add.text(-180,280,"Max Damage: ",{fontSize:27, fontFamily: "Monaco",color: "#000000"}).setData("value",max_damage);
         
         this.textArr = [this.comboText,this.totalDamageText,this.maxDamageText];
         this.displayStats();
-
     }
-
 
     displayStats(){
 

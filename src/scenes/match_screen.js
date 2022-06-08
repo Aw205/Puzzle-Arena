@@ -36,8 +36,8 @@ class match_screen extends Phaser.Scene{
             }
         });
 
-        this.enemy = new Enemy(this,330,130,null,true,data.enemy.color).setScale(10,10);
-        this.player_healthBar = new HealthBar(this,{ x:200, y: 230 },6*Orb.WIDTH);
+        this.enemy = new Enemy(this,330,130,null,true,data.enemy.color,data.enemyHealth).setScale(10,10);
+        this.player_healthBar = new HealthBar(this,{ x:200, y: 230 },6*Orb.WIDTH,100);
         this.createHUD();
         this.board = new Board(this,100,100);
 
@@ -72,6 +72,7 @@ class match_screen extends Phaser.Scene{
             targets:  this.sound.get("combat_music"),
             volume:   0,
             duration: 1000,
+            onStart: () => this.cameras.main.fadeOut(500),
             onComplete: ()=>{
                 this.sound.stopByKey("combat_music");
                 this.sound.play("main_music",{volume: 0.3});
@@ -81,7 +82,6 @@ class match_screen extends Phaser.Scene{
                 else{
                     this.scene.start("victory_screen");
                 }
-               
             }
         });
 
@@ -89,7 +89,7 @@ class match_screen extends Phaser.Scene{
 
     createHUD(){
 
-        this.totalCombosText = new Phaser.GameObjects.Text(this,10,10,"Combos: 0",{fontSize: "30px", color: "#FFBF00"});
+        this.totalCombosText = new Phaser.GameObjects.Text(this,10,10,"Combos: 0",{fontSize: "30px", fontFamily: "Monaco",color: "#000000", strokeThickness: 10 ,stroke: "#FFBF00"});
         this.add.existing(this.totalCombosText);
 
     }

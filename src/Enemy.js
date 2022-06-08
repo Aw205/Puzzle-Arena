@@ -1,6 +1,6 @@
 class Enemy extends Phaser.Physics.Arcade.Sprite{
 
-    constructor(scene,x,y,texture,showHealth=false,slimeColor=-1){
+    constructor(scene,x,y,texture,showHealth=false,slimeColor=-1,maxHealth){
         super(scene,x,y,texture); 
 
         this.color = (slimeColor == -1) ? Phaser.Math.Between(0,6) : slimeColor;
@@ -10,7 +10,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
             .play(slimeColors[this.color] + "_idle");
 
         if(showHealth){
-            this.healthBar = new HealthBar(scene,{x: game.config.width/2-50,y: 10},80);
+            this.healthBar = new HealthBar(scene,{x: game.config.width/2-50 ,y: 10},80,maxHealth);
             emitter.on("enemy_turn",this.onEnemyTurn,this);
             emitter.on("damage_enemy",this.onDamaged,this);
         }

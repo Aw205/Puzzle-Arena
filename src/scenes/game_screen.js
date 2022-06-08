@@ -1,7 +1,7 @@
 
 var player;
 var slimes_killed = 0;
-var total_combos = [];
+var total_combos = [1,1,1,1];
 var total_damage = 0;
 var max_damage = 0;
 
@@ -28,11 +28,8 @@ class game_screen extends Phaser.Scene {
         this.createMap();
         player.setDepth(10);
 
-        this.cameras.main.startFollow(player,false,0.2,0.2);
+        this.cameras.main.startFollow(player,false,0.1,0.1);
         this.cameras.main.setZoom(2);
-
-        // player.body.setCollideWorldBounds(true);
-        // player.body.onWorldBounds = true;   
 
     }
 
@@ -46,10 +43,10 @@ class game_screen extends Phaser.Scene {
             layer.setCollisionByProperty({collides: true});
             this.physics.add.collider(player,layer);
         }
-        this.enemyArray = map.createFromObjects("Enemy",{name: "Slime", classType: Enemy});
-        for(let slime of this.enemyArray){
+        let enemyArray = map.createFromObjects("Enemy",{name: "Slime", classType: Enemy});
+        for(let slime of enemyArray){
             this.physics.add.collider(slime,player,()=>{
-                this.scene.transition({target: "match_screen", duration: 0, sleep: true, data: {enemy: slime}});
+                this.scene.transition({target: "match_screen", duration: 0, sleep: true, data: {enemy: slime, enemyHealth: slime.data.values.health}});
             });
         }
         //let entrances = map.createFromObjects("House Entrance",{name: "Entrance", classType: Entrance});
