@@ -32,7 +32,7 @@ class match_screen extends Phaser.Scene{
             duration: 500,
             onComplete: ()=>{
                 this.sound.stopByKey("main_music");
-                this.sound.play("combat_music");
+                this.sound.play("combat_music",{loop: true});
             }
         });
 

@@ -33,7 +33,7 @@ class Enemy extends Phaser.Physics.Arcade.Sprite{
 
         this.play(slimeColors[this.color] + "_swallow").chain(slimeColors[this.color] + "_idle");
         this.scene.sound.play("player_hit");
-        emitter.emit("damage_player",10);
+        emitter.emit("damage_player",Phaser.Math.Between(8,16));
         emitter.emit("playerTurn");
 
     }
